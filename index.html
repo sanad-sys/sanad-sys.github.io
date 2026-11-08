@@ -16,11 +16,26 @@
 <style>
 html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;color:#12201C}
 #app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#FAF8F3}
-#splash{position:fixed;inset:0;z-index:5;background:#FAF8F3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .4s}
+#splash{position:fixed;inset:0;z-index:5;background:#FAF8F3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:opacity .45s}
 #splash.hide{opacity:0;pointer-events:none}
-#splash img{width:96px;height:96px;animation:pulse 1.4s ease-in-out infinite}
-#splash p{margin:0;font-size:14px;color:#5C6B66}
-@keyframes pulse{50%{transform:scale(.93);opacity:.8}}
+#splash .s{stroke-dasharray:100;stroke-dashoffset:100;animation:dr .7s .3s cubic-bezier(.5,0,.2,1) forwards}
+#splash .a{stroke-dasharray:100;stroke-dashoffset:100;animation:dr .5s 1.3s cubic-bezier(.5,0,.2,1) forwards}
+#splash .bg{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(1.4);animation:bgi .5s .55s cubic-bezier(.2,.8,.2,1) forwards}
+#splash .u{opacity:0;transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);animation:gr .45s cubic-bezier(.2,.8,.2,1) forwards}
+#splash .q{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:pop .45s 1.7s cubic-bezier(.3,1.8,.5,1) forwards}
+#splash .wm{margin-top:18px;font-family:'Michroma',system-ui,sans-serif;font-size:clamp(22px,8vw,30px);letter-spacing:.18em;color:#0B5D4B;direction:ltr;opacity:0;animation:fi .5s 2.1s forwards}
+#splash .sy{font-family:'Michroma',system-ui,sans-serif;font-size:8px;letter-spacing:.4em;color:#5C6B66;display:flex;align-items:center;gap:8px;margin-top:6px;opacity:0;animation:fi .4s 2.5s forwards}
+#splash .sy i{display:block;width:22px;height:1px;background:#C9A24D}
+#splash .pb{width:160px;height:3px;background:#E7E2D6;border-radius:2px;margin-top:22px;overflow:hidden}
+#splash .pb i{display:block;height:3px;width:0;border-radius:2px;background:#B9E4CF;animation:ld 3.2s .4s cubic-bezier(.2,.6,.3,1) forwards}
+#splash .pc{margin:6px 0 0;font-size:12.5px;color:#5C6B66}
+#splash .ft{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;opacity:0;animation:fi .5s 2.8s forwards}
+#splash .ft small{display:block;font-family:'Michroma',system-ui,sans-serif;font-size:7px;letter-spacing:.35em;color:#8A958F;direction:ltr}
+#splash .ft b{display:block;font-family:'Aref Ruqaa',serif;font-weight:700;font-size:21px;color:#0B5D4B;line-height:1.3}
+@keyframes dr{to{stroke-dashoffset:0}}@keyframes fi{to{opacity:1}}@keyframes gr{to{opacity:1;transform:scaleY(1)}}@keyframes pop{to{opacity:1;transform:scale(1)}}@keyframes bgi{to{opacity:1;transform:scale(1)}}
+@keyframes ld{0%{width:0}70%{width:78%;background:#C9A24D}100%{width:92%;background:#0B5D4B}}
+#splash.done .pb i{width:100%!important;background:#0B5D4B;transition:width .3s}
+@media (prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}}
 .bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:10;max-width:480px;margin:0 auto;background:#12201C;color:#FAF8F3;border-radius:18px;padding:14px 16px;display:none;align-items:center;gap:12px;font-size:14px;line-height:1.6;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .bar.show{display:flex}
 .bar img{width:40px;height:40px;border-radius:11px;flex:none}
@@ -33,11 +48,27 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
 #off img{width:72px;height:72px}
 #off b{font-size:18px}#off p{margin:0;color:#5C6B66;font-size:14px;line-height:1.7}
 #off button{height:48px;padding:0 24px;border:none;border-radius:14px;background:#0B5D4B;color:#fff;font-family:inherit;font-size:15px}
-@media (prefers-reduced-motion:reduce){#splash img{animation:none}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="splash"><img src="icon-192.png" alt="سند"><p>لحظة…</p></div>
+<div id="splash" aria-label="سند">
+  <svg width="110" height="110" viewBox="0 0 120 120" aria-hidden="true">
+    <rect class="bg" width="120" height="120" rx="30" fill="#0B5D4B"/>
+    <path class="s" pathLength="100" d="M60 14L96 27V54C96 79 81 94 60 106 39 94 24 79 24 54V27Z" stroke="#B9E4CF" stroke-width="7" stroke-linejoin="round" fill="none"/>
+    <rect class="u" style="animation-delay:.9s" x="38" y="70" width="11" height="14" rx="2.5" fill="#F0997B"/>
+    <rect class="u" style="animation-delay:1.02s" x="54.5" y="60" width="11" height="24" rx="2.5" fill="#FAC775"/>
+    <rect class="u" style="animation-delay:1.14s" x="71" y="50" width="11" height="34" rx="2.5" fill="#9FE1CB"/>
+    <path class="a" pathLength="100" d="M34 64L50 52 62 56 84 34" stroke="#FAF8F3" stroke-width="5" stroke-linejoin="miter" fill="none"/>
+    <path class="q" d="M95 23L88.6 39.2 78.7 29.3Z" fill="#FAF8F3"/>
+  </svg>
+  <div class="wm">SANAD</div>
+  <div class="sy"><i></i>SYSTEM<i></i></div>
+  <div class="pb"><i></i></div>
+  <p class="pc" id="pc">جاري فتح سند…</p>
+  <div class="ft"><small>CRAFTED BY</small><b>أبو سند</b></div>
+</div>
 <div id="off" role="alert"><img src="icon-192.png" alt=""><b>ما فيه اتصال</b><p>تأكد من النت وارجع جرّب.<br>اللي سجلته قبل محفوظ في جوالك.</p><button type="button" onclick="location.reload()">جرّب مرة ثانية</button></div>
 <div class="bar" id="ins" role="dialog" aria-label="تثبيت سند"><img src="icon-192.png" alt=""><span id="insT">ثبّت سند على جوالك عشان يفتح مثل التطبيق</span><button class="go" id="insGo" type="button">تثبيت</button><button class="x" id="insX" type="button" aria-label="إغلاق">✕</button></div>
 
@@ -47,8 +78,16 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
   /* ═══ الرابط الرسمي لنظام سند — ما يتغير ═══ */
   var APP_URL = 'https://script.google.com/macros/s/AKfycbyGpZXFoPyezeBBB3hAcnxDYJXw6gN1USfKZAgEZgj8N-Kp3M_P5oTQh16S9JcOKpLJ/exec';
 
-  var splash = document.getElementById('splash');
-  function hideSplash() { splash.classList.add('hide'); setTimeout(function () { splash.style.display = 'none'; }, 450); }
+  var splash = document.getElementById('splash'), hidden = false, t0 = Date.now();
+  function hideSplash() {
+    if (hidden) return; hidden = true;
+    splash.classList.add('done');
+    /* ما نقطع الحركة بنصها: أقل شي ١٫٦ ثانية، وأقصى شي لما يجهز النظام */
+    var wait = Math.max(0, 1600 - (Date.now() - t0));
+    setTimeout(function () { splash.classList.add('hide'); setTimeout(function () { splash.style.display = 'none'; }, 450); }, wait);
+  }
+  /* النظام يقول "جاهز" أول ما تظهر شاشة الرمز أو الرئيسية ← نشيل الغطاء على طول */
+  window.addEventListener('message', function (e) { if (e.data && e.data.sanad === 'ready') hideSplash(); });
 
   /* بدون نت: رسالة واضحة بدل صفحة خطأ */
   if (navigator.onLine === false) { document.getElementById('off').classList.add('show'); hideSplash(); }
@@ -57,10 +96,10 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
     f.id = 'app';
     f.title = 'سند';
     f.allow = 'geolocation; camera; microphone; autoplay; clipboard-write; fullscreen; web-share';
-    f.src = APP_URL;
-    f.addEventListener('load', function () { setTimeout(hideSplash, 250); });
+    f.src = APP_URL + '?cover=1';
+    f.addEventListener('load', function () { document.getElementById('pc').textContent = 'لحظة…'; setTimeout(hideSplash, 1500); });   // لو ما وصلت "جاهز"
     document.body.appendChild(f);
-    setTimeout(hideSplash, 8000);   // احتياط
+    setTimeout(hideSplash, 9000);   // احتياط
   }
 
   /* الاهتزاز: النظام داخل إطار قوقل يطلبه من هنا (المتصفح يمنعه داخل الإطارات) */

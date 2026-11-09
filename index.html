@@ -48,6 +48,14 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
 #off img{width:72px;height:72px}
 #off b{font-size:18px}#off p{margin:0;color:#5C6B66;font-size:14px;line-height:1.7}
 #off button{height:48px;padding:0 24px;border:none;border-radius:14px;background:#0B5D4B;color:#fff;font-family:inherit;font-size:15px}
+/* v7.3: لوحة تفعيل إشعارات الجوال (الإذن لازم يكون من الصفحة الأم وبضغطة من المستخدم) */
+#psh{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;justify-content:flex-end;background:rgba(10,25,20,.45)}
+#psh.show{display:flex}
+#psh .pn{background:#fff;border-radius:22px 22px 0 0;padding:22px 20px calc(18px + env(safe-area-inset-bottom));text-align:center;font-family:'Readex Pro',system-ui,sans-serif;color:#12201C;animation:pu .25s ease-out}
+@keyframes pu{from{transform:translateY(100%)}to{transform:none}}
+#psh .bl{font-size:42px;line-height:1}#psh h3{margin:10px 0 6px;font-size:18px}#psh p{margin:0 0 18px;color:#5C6B66;font-size:14px;line-height:1.7}
+#psh button{display:block;width:100%;height:52px;border-radius:16px;border:none;font:inherit;font-size:16px;font-weight:600}
+#psh .y{background:#0B5D4B;color:#fff}#psh .n{background:none;color:#5C6B66;margin-top:6px;font-weight:400}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
@@ -72,6 +80,7 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
 <div id="off" role="alert"><img src="icon-192.png" alt=""><b>ما فيه اتصال</b><p>تأكد من النت وارجع جرّب.<br>اللي سجلته قبل محفوظ في جوالك.</p><button type="button" onclick="location.reload()">جرّب مرة ثانية</button></div>
 <div class="bar" id="ins" role="dialog" aria-label="تثبيت سند"><img src="icon-192.png" alt=""><span id="insT">ثبّت سند على جوالك عشان يفتح مثل التطبيق</span><button class="go" id="insGo" type="button">تثبيت</button><button class="x" id="insX" type="button" aria-label="إغلاق">✕</button></div>
 
+<div id="psh" role="dialog" aria-modal="true"><div class="pn"><div class="bl">🔔</div><h3 id="pshT"></h3><p id="pshP"></p><button class="y" id="pshY"></button><button class="n" id="pshN"></button></div></div>
 <script>
 (function () {
   'use strict';
@@ -159,6 +168,40 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
     setTimeout(function () { bar.classList.add('show'); }, 3000);
   }
 
+
+  /* ═══ إشعارات الجوال (v7.3): النظام داخل إطار قوقل يطلب التفعيل من هنا — الإذن والاشتراك لازم يكونون بالصفحة الأم ═══ */
+  var FB = 'https://www.gstatic.com/firebasejs/10.12.2/';
+  var PT = {
+    ar: ['فعّل إشعارات سند', 'يوصلك المطلوب منك على الجوال حتى لو التطبيق مسكّر. بعد ما تضغط «فعّل» اختر «السماح».', 'فعّل', 'مو الحين'],
+    en: ['Turn on Sanad notifications', "Get what you need to do on your phone even when the app is closed. After tapping «Turn on», choose «Allow».", 'Turn on', 'Not now'],
+    bn: ['সানাদ নোটিফিকেশন চালু করুন', 'অ্যাপ বন্ধ থাকলেও আপনার কাজের বার্তা ফোনে পাবেন। «চালু করুন» চাপার পর «Allow» বেছে নিন।', 'চালু করুন', 'এখন না']
+  };
+  function loadJs(u) { return new Promise(function (res, rej) { var sc = document.createElement('script'); sc.src = u; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); }); }
+  var pushOk = 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window;
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || !e.source) return;
+    var src = e.source, reply = function (o) { try { src.postMessage(o, '*'); } catch (x) {} };
+    if (d.sanad === 'push?') { reply({ sanad: 'push-info', supported: pushOk, perm: pushOk ? Notification.permission : 'unsupported', standalone: standalone, ios: ios }); return; }
+    if (d.sanad !== 'push-on' || !pushOk || !d.cfg || !d.cfg.projectId || typeof d.vapid !== 'string') return;
+    var t = PT[d.lang] || PT.ar, box = document.getElementById('psh');
+    document.getElementById('pshT').textContent = t[0]; document.getElementById('pshP').textContent = t[1];
+    var y = document.getElementById('pshY'), n = document.getElementById('pshN');
+    y.textContent = t[2]; n.textContent = t[3]; y.disabled = false;
+    box.setAttribute('dir', d.lang === 'en' || d.lang === 'bn' ? 'ltr' : 'rtl');
+    box.classList.add('show');
+    n.onclick = function () { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, later: true }); };
+    y.onclick = function () {
+      y.disabled = true;
+      Notification.requestPermission().then(function (perm) {
+        if (perm !== 'granted') { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, perm: perm }); return; }
+        return loadJs(FB + 'firebase-app-compat.js').then(function () { return loadJs(FB + 'firebase-messaging-compat.js'); }).then(function () {
+          if (!firebase.apps.length) firebase.initializeApp(d.cfg);
+          return navigator.serviceWorker.register('sw.js').then(function () { return navigator.serviceWorker.ready; });
+        }).then(function (reg) { return firebase.messaging().getToken({ vapidKey: d.vapid, serviceWorkerRegistration: reg }); })
+          .then(function (tk) { box.classList.remove('show'); reply({ sanad: 'push-token', ok: !!tk, token: tk || '' }); });
+      }).catch(function (err) { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, err: String((err && err.message) || err).slice(0, 200) }); });
+    };
+  });
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
   }

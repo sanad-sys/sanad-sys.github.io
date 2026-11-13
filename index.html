@@ -194,15 +194,32 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
   var deferred = null;
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault(); deferred = e;
+    if (toChrome) return;   // متصفح غير Chrome: الشريط يوجّه لـ Chrome بدل ما يثبّت من هنا
     if (!standalone && !dismissed) setTimeout(function () { bar.classList.add('show'); }, 3000);
   });
   go.addEventListener('click', function () {
+    if (toChrome) { location.href = chromeUrl; return; }   // أندرويد بمتصفح غير Chrome ← نفتح نفس الرابط في Chrome
     if (deferred) { deferred.prompt(); deferred.userChoice.then(function () { deferred = null; bar.classList.remove('show'); }); }
     else bar.classList.remove('show');
   });
   document.getElementById('insX').addEventListener('click', function () {
     bar.classList.remove('show'); try { localStorage.setItem('sanad_ins_x', '1'); } catch (x) {}
   });
+  /* أندرويد بمتصفح غير Chrome (متصفح الجوال الجاهز، سامسونج، أوبرا، متصفح واتساب/فيسبوك الداخلي…):
+     التثبيت منه يصنع تطبيق بصيغة قديمة يحظره Play Protect («تم حظر تطبيق غير آمن») — نوجّهه يفتح الرابط في Chrome ويثبّت من هناك.
+     ما نمنع الاستخدام: الشريط تنبيه بس، ويتسكّر */
+  var ua = navigator.userAgent;
+  var toChrome = /Android/i.test(ua) && !standalone &&
+    (!/Chrome\/\d/.test(ua) || /SamsungBrowser|MiuiBrowser|XiaoMi|OPR\/|OPT\/|Opera|EdgA|UCBrowser|YaBrowser|HuaweiBrowser|HeyTapBrowser|OppoBrowser|VivoBrowser|PHX\/|Firefox|; wv\)|FBAN|FBAV|Instagram|Snapchat|Line\/|GSA\/|DuckDuckGo|Puffin|Silk/i.test(ua));
+  var chromeUrl = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' +
+    encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
+  var chX = false; try { chX = !!sessionStorage.getItem('sanad_ch_x'); } catch (x) {}
+  if (toChrome && !chX) {
+    document.getElementById('insT').textContent = 'لتثبيت سند افتحه في Google Chrome — التثبيت من هالمتصفح يطلع تحذير';
+    go.textContent = 'افتح في Chrome';
+    setTimeout(function () { bar.classList.add('show'); }, 2500);
+  }
+  if (toChrome) document.getElementById('insX').addEventListener('click', function () { try { sessionStorage.setItem('sanad_ch_x', '1'); } catch (x) {} });
   /* آيفون: ما فيه زر تثبيت تلقائي، نعطيه الطريقة */
   var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   if (ios && !standalone && !dismissed) {

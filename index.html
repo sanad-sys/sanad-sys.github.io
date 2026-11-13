@@ -6,6 +6,18 @@
 <title>سند · SANAD</title>
 <meta name="description" content="نظام سند لإدارة المقاصف">
 <meta name="theme-color" content="#FAF8F3">
+<meta name="color-scheme" content="light">
+<script>
+/* لون سند (يرسله من داخل الإطار): آخر وضع محفوظ ← شاشة الفتح تطلع بنفس اللون من البداية */
+try { var T0 = JSON.parse(localStorage.getItem('sanad_theme') || 'null'), H6 = /^#[0-9a-fA-F]{6}$/;
+  if (T0 && H6.test(T0.bg)) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', T0.bg);
+    document.querySelector('meta[name="color-scheme"]').setAttribute('content', T0.dark ? 'dark' : 'light');
+    document.documentElement.style.setProperty('--sbg', T0.bg);
+    document.documentElement.style.colorScheme = T0.dark ? 'dark' : 'light';
+    if (T0.dark) document.documentElement.className += ' dk';
+  } } catch (e) {}
+</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="سند">
@@ -14,9 +26,9 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
-html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;color:#12201C}
-#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#FAF8F3}
-#splash{position:fixed;inset:0;z-index:5;background:#FAF8F3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:opacity .45s}
+html,body{margin:0;height:100%;background:var(--sbg,#FAF8F3);overflow:hidden;font-family:system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;color:#12201C}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:var(--sbg,#FAF8F3)}
+#splash{position:fixed;inset:0;z-index:5;background:var(--sbg,#FAF8F3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:opacity .45s}
 #splash.hide{opacity:0;pointer-events:none}
 #splash .s{stroke-dasharray:100;stroke-dashoffset:100;animation:dr .7s .3s cubic-bezier(.5,0,.2,1) forwards}
 #splash .a{stroke-dasharray:100;stroke-dashoffset:100;animation:dr .5s 1.3s cubic-bezier(.5,0,.2,1) forwards}
@@ -43,7 +55,7 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
 .bar button{height:40px;padding:0 14px;border:none;border-radius:12px;font-family:inherit;font-size:14px;cursor:pointer;flex:none}
 .bar .go{background:#0B5D4B;color:#fff;font-weight:600}
 .bar .x{background:transparent;color:#B9E4CF;padding:0 6px}
-#off{position:fixed;inset:0;z-index:6;background:#FAF8F3;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
+#off{position:fixed;inset:0;z-index:6;background:var(--sbg,#FAF8F3);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
 #off.show{display:flex}
 #off img{width:72px;height:72px}
 #off b{font-size:18px}#off p{margin:0;color:#5C6B66;font-size:14px;line-height:1.7}
@@ -56,6 +68,12 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
 #psh .bl{font-size:42px;line-height:1}#psh h3{margin:10px 0 6px;font-size:18px}#psh p{margin:0 0 18px;color:#5C6B66;font-size:14px;line-height:1.7}
 #psh button{display:block;width:100%;height:52px;border-radius:16px;border:none;font:inherit;font-size:16px;font-weight:600}
 #psh .y{background:#0B5D4B;color:#fff}#psh .n{background:none;color:#5C6B66;margin-top:6px;font-weight:400}
+/* الوضع الداكن (من سند): النصوص تبان على الخلفية الداكنة */
+html.dk body,html.dk #off b{color:#E6EEEA}
+html.dk #splash .wm,html.dk #splash .ft b{color:#9FE1CB}
+html.dk #splash .sy,html.dk #splash .pc,html.dk #off p{color:#9AABA4}
+html.dk #splash .pb{background:#24332E}
+html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n{color:#9AABA4}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
@@ -97,6 +115,31 @@ html,body{margin:0;height:100%;background:#FAF8F3;overflow:hidden;font-family:sy
   }
   /* النظام يقول "جاهز" أول ما تظهر شاشة الرمز أو الرئيسية ← نشيل الغطاء على طول */
   window.addEventListener('message', function (e) { if (e.data && e.data.sanad === 'ready') hideSplash(); });
+
+  /* لون سند: شريط الحالة (theme-color) والخلفية وcolor-scheme بنفس لون التطبيق، ويتحفظ للفتح الجاي.
+     نقبل الرسالة بس من نظام سند نفسه: لازم تجي من داخل إطار التطبيق (#app)، ومن أصل Apps Script
+     (script.google.com أو *-script.googleusercontent.com، أو "null" لإطار قوقل المعزول) — والقيم ألوان hex بس */
+  function fromApp(e) {
+    var app = document.getElementById('app'), aw = app && app.contentWindow, w = e.source;
+    if (!aw || !w) return false;
+    var inside = false;
+    try { for (var i = 0; i < 8 && w; i++) { if (w === aw) { inside = true; break; } if (w === w.parent) break; w = w.parent; } } catch (x) { return false; }
+    return inside && (/^https:\/\/(script\.google\.com|[a-z0-9-]+-script\.googleusercontent\.com)$/.test(e.origin) || e.origin === 'null');
+  }
+  function setTheme(t) {
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', t.top);
+    var cs = document.querySelector('meta[name="color-scheme"]'); if (cs) cs.setAttribute('content', t.dark ? 'dark' : 'light');
+    var r = document.documentElement;
+    r.style.setProperty('--sbg', t.bg); r.style.colorScheme = t.dark ? 'dark' : 'light';
+    r.classList.toggle('dk', !!t.dark);
+  }
+  window.addEventListener('message', function (e) {
+    var d = e.data, H6 = /^#[0-9a-fA-F]{6}$/;
+    if (!d || d.sanad !== 'theme' || !H6.test(d.top) || !H6.test(d.bg) || !fromApp(e)) return;
+    var t = { top: d.top, bg: d.bg, dark: d.dark === true };
+    setTheme(t);
+    try { localStorage.setItem('sanad_theme', JSON.stringify(t)); } catch (x) {}
+  });
 
   /* بدون نت: رسالة واضحة بدل صفحة خطأ */
   if (navigator.onLine === false) { document.getElementById('off').classList.add('show'); hideSplash(); }

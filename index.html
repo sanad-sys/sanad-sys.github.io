@@ -40,7 +40,9 @@ html,body{margin:0;height:100%;background:var(--sbg,#FAF8F3);overflow:hidden;fon
 #splash .sy i{display:block;width:22px;height:1px;background:#C9A24D}
 #splash .pb{width:160px;height:3px;background:#E7E2D6;border-radius:2px;margin-top:22px;overflow:hidden}
 #splash .pb i{display:block;height:3px;width:0;border-radius:2px;background:#B9E4CF;animation:ld 3.2s .4s cubic-bezier(.2,.6,.3,1) forwards}
-#splash .pc{margin:6px 0 0;font-size:12.5px;color:#5C6B66}
+#splash .pc{margin:6px 0 0;font-size:12.5px;color:#5C6B66;text-align:center;padding:0 24px}
+#splash .rt{margin-top:14px;height:44px;padding:0 22px;border:none;border-radius:14px;background:#0B5D4B;color:#fff;font-family:inherit;font-size:14px;cursor:pointer}
+#splash .rt[hidden]{display:none}
 #splash .ft{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;opacity:0;animation:fi .5s 2.8s forwards}
 #splash .ft small{display:block;font-family:'Michroma',system-ui,sans-serif;font-size:7px;letter-spacing:.35em;color:#8A958F;direction:ltr}
 #splash .ft b{display:block;font-family:'Aref Ruqaa',serif;font-weight:700;font-size:21px;color:#0B5D4B;line-height:1.3}
@@ -93,6 +95,7 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
   <div class="sy"><i></i>SYSTEM<i></i></div>
   <div class="pb"><i></i></div>
   <p class="pc" id="pc">جاري فتح سند…</p>
+  <button class="rt" id="rt" type="button" hidden>جرّب مرة ثانية</button>
   <div class="ft"><small>CRAFTED BY</small><b>أبو سند</b></div>
 </div>
 <div id="off" role="alert"><img src="icon-192.png" alt=""><b>ما فيه اتصال</b><p>تأكد من النت وارجع جرّب.<br>اللي سجلته قبل محفوظ في جوالك.</p><button type="button" onclick="location.reload()">جرّب مرة ثانية</button></div>
@@ -105,13 +108,13 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
   /* ═══ الرابط الرسمي لنظام سند — ما يتغير ═══ */
   var APP_URL = 'https://script.google.com/macros/s/AKfycbyGpZXFoPyezeBBB3hAcnxDYJXw6gN1USfKZAgEZgj8N-Kp3M_P5oTQh16S9JcOKpLJ/exec';
 
-  var splash = document.getElementById('splash'), hidden = false, t0 = Date.now();
+  var splash = document.getElementById('splash'), hidden = false, t0 = Date.now(), slowT = 0;
   function hideSplash() {
-    if (hidden) return; hidden = true;
+    if (hidden) return; hidden = true; clearTimeout(slowT);
     splash.classList.add('done');
     /* ما نقطع الحركة بنصها: أقل شي ١٫٦ ثانية، وأقصى شي لما يجهز النظام */
     var wait = Math.max(0, 1600 - (Date.now() - t0));
-    setTimeout(function () { splash.classList.add('hide'); setTimeout(function () { splash.style.display = 'none'; }, 450); }, wait);
+    setTimeout(function () { if (!hidden) return; splash.classList.add('hide'); setTimeout(function () { if (hidden) splash.style.display = 'none'; }, 450); }, wait);
   }
   /* النظام يقول "جاهز" أول ما تظهر شاشة الرمز أو الرئيسية ← نشيل الغطاء على طول */
   window.addEventListener('message', function (e) { if (e.data && e.data.sanad === 'ready') hideSplash(); });
@@ -141,18 +144,73 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
     try { localStorage.setItem('sanad_theme', JSON.stringify(t)); } catch (x) {}
   });
 
-  /* بدون نت: رسالة واضحة بدل صفحة خطأ */
-  if (navigator.onLine === false) { document.getElementById('off').classList.add('show'); hideSplash(); }
-  else {
+  /* v8: تحميل سند. قبل: بعد ٩ ثواني شاشة التحميل تختفي حتى لو سند ما طلع ← شاشة فاضية «واقفة» (يصير كثير لما تفتحه بعد فترة: قوقل أبطأ والنت يعلّق).
+     الحين: شاشة التحميل تبقى لين سند يقول «جاهز» (أو الإطار يكمّل تحميله) · بعد ١٢ ثانية رسالة وزر «جرّب مرة ثانية» · وبعد ٢٥ ثانية نعيد المحاولة لحالنا مرة وحدة */
+  var pc = document.getElementById('pc'), rt = document.getElementById('rt'), tries = 0;
+  function showSplash(msg) {
+    hidden = false; t0 = Date.now();
+    splash.classList.remove('done', 'hide'); splash.style.display = '';
+    pc.textContent = msg || 'جاري فتح سند…'; rt.hidden = true;
+  }
+  function watchSlow() {
+    clearTimeout(slowT);
+    slowT = setTimeout(function () {
+      if (hidden) return;
+      pc.textContent = 'سند يتأخر بالفتح… النت بطيء أو قوقل يتأخر'; rt.hidden = false;
+      if (tries < 2) slowT = setTimeout(function () { if (!hidden) reloadApp('نعيد المحاولة…'); }, 13000);
+    }, 12000);
+  }
+  function loadApp() {
+    tries++;
+    var old = document.getElementById('app'); if (old) old.parentNode.removeChild(old);
     var f = document.createElement('iframe');
     f.id = 'app';
     f.title = 'سند';
     f.allow = 'geolocation; camera; microphone; autoplay; clipboard-write; fullscreen; web-share';
     f.src = APP_URL + '?cover=1';
-    f.addEventListener('load', function () { document.getElementById('pc').textContent = 'لحظة…'; setTimeout(hideSplash, 1500); });   // لو ما وصلت "جاهز"
+    f.addEventListener('load', function () {   // لو ما وصلت "جاهز" (مثلاً صفحة خطأ من قوقل) نبيّن اللي جا
+      if (hidden || document.getElementById('app') !== f) return;
+      pc.textContent = 'لحظة…'; setTimeout(function () { if (document.getElementById('app') === f) hideSplash(); }, 1500);
+    });
     document.body.appendChild(f);
-    setTimeout(hideSplash, 9000);   // احتياط
+    watchSlow();
   }
+  function reloadApp(msg) { showSplash(msg); loadApp(); }
+  rt.addEventListener('click', function () { tries = 0; reloadApp(); });
+
+  /* بدون نت: رسالة واضحة بدل صفحة خطأ */
+  if (navigator.onLine === false) { document.getElementById('off').classList.add('show'); hideSplash(); }
+  else loadApp();
+
+  /* v8: الرجوع للتطبيق بعد فترة — أندرويد ممكن يسكّر إطار سند بالخلفية (الذاكرة) والغلاف يبقى ← شاشة فاضية لين تسكّر التطبيق.
+     نسأل سند «شغّال؟» (ping لكل الإطارات) ولو ما رد خلال ٨ ثواني نعيد تحميله بشاشة التحميل.
+     يشتغل بس لو سند رد مرة قبل (سند 9.30 وطالع فيه الرد) — النسخ القديمة ما تنعاد أبد */
+  var canPong = false, hidAt = 0, waitP = null;
+  function ping(id) {
+    var app = document.getElementById('app'), n = 0;
+    (function walk(w, d) {
+      if (!w || d > 4 || n > 30) return; n++;
+      try { w.postMessage({ sanad: 'ping', id: id }, '*'); } catch (x) {}
+      var k = 0; try { k = w.length; } catch (x) {}
+      for (var i = 0; i < k && i < 10; i++) { var c = null; try { c = w[i]; } catch (x) {} walk(c, d + 1); }
+    })(app && app.contentWindow, 0);
+  }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d) return;
+    if (d.sanad === 'ready') { setTimeout(function () { ping('hi'); }, 300); return; }   // نعرف هل سند يرد
+    if (d.sanad !== 'pong' || !fromApp(e)) return;
+    canPong = true;
+    if (waitP && d.id === waitP.id) { clearTimeout(waitP.t); waitP = null; }
+  });
+  function back() {
+    var away = hidAt ? Date.now() - hidAt : 0; hidAt = 0;
+    if (!canPong || !hidden || away < 60000 || waitP || navigator.onLine === false) return;
+    var id = 'p' + Date.now();
+    waitP = { id: id, t: setTimeout(function () { waitP = null; if (!document.hidden) reloadApp('نرجّع سند…'); }, 8000) };
+    ping(id);
+  }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!hidAt) hidAt = Date.now(); } else back(); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) back(); });
 
   /* الاهتزاز: النظام داخل إطار قوقل يطلبه من هنا (المتصفح يمنعه داخل الإطارات) */
   /* إطار قوقل ممكن يوصل بأصل "null" (إطار معزول)، فنقبل الرسالة من أي مصدر —

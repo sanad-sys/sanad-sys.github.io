@@ -1,6 +1,6 @@
 /* سند — يحفظ صفحة الغلاف والأيقونات في الجوال عشان تفتح بسرعة
    (بيانات النظام نفسها ما تنحفظ هنا، تروح للشيت مباشرة) */
-var CACHE = 'sanad-v7';
+var CACHE = 'sanad-v8';
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png', './favicon.png'];
 
 self.addEventListener('install', function (e) {
@@ -11,14 +11,22 @@ self.addEventListener('activate', function (e) {
     return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
 });
-/* ملفات الغلاف: من النت أول (عشان أي تحديث يوصل)، ولو ما فيه نت من المحفوظ */
+/* ملفات الغلاف: من النت أول (عشان أي تحديث يوصل)، ولو ما فيه نت من المحفوظ
+   v8: لو النت علّق (يصير لما تفتح التطبيق بعد فترة) ما ننتظر للأبد على شاشة فاضية: بعد ٤ ثواني نفتح المحفوظ،
+   والنسخة الجديدة تنحفظ بالخلفية لما توصل وتطلع بالفتح الجاي */
 self.addEventListener('fetch', function (e) {
   var u = new URL(e.request.url);
   if (e.request.method !== 'GET' || u.origin !== self.location.origin) return;
-  e.respondWith(fetch(e.request).then(function (r) {
-    var copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
-    return r;
-  }).catch(function () { return caches.match(e.request).then(function (m) { return m || caches.match('./index.html'); }); }));
+  var saved = function () { return caches.match(e.request).then(function (m) { return m || caches.match('./index.html'); }); };
+  e.respondWith(new Promise(function (resolve) {
+    var done = false, end = function (r) { if (!done && r) { done = true; resolve(r); } };
+    var t = setTimeout(function () { saved().then(end); }, 4000);   // المحفوظ ما لقيناه ← نكمّل ننتظر النت
+    fetch(e.request).then(function (r) {
+      clearTimeout(t);
+      if (r && r.ok) { var copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(e.request, copy); }); }
+      end(r);
+    }).catch(function () { clearTimeout(t); saved().then(function (m) { end(m || Response.error()); }); });
+  }));
 });
 
 /* v7.3: إشعارات الجوال — يوصل من Firebase ويطلع حتى لو التطبيق مسكّر */

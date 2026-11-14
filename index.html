@@ -306,10 +306,7 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
     var y = document.getElementById('pshY'), n = document.getElementById('pshN');
     y.textContent = t[2]; n.textContent = t[3]; y.disabled = false;
     box.setAttribute('dir', d.lang === 'en' || d.lang === 'bn' ? 'ltr' : 'rtl');
-    box.classList.add('show');
-    n.onclick = function () { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, later: true }); };
-    y.onclick = function () {
-      y.disabled = true;
+    var go = function () {
       Notification.requestPermission().then(function (perm) {
         if (perm !== 'granted') { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, perm: perm }); return; }
         return loadJs(FB + 'firebase-app-compat.js').then(function () { return loadJs(FB + 'firebase-messaging-compat.js'); }).then(function () {
@@ -319,6 +316,13 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
           .then(function (tk) { box.classList.remove('show'); reply({ sanad: 'push-token', ok: !!tk, token: tk || '' }); });
       }).catch(function (err) { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, err: String((err && err.message) || err).slice(0, 200) }); });
     };
+    /* سند 9.34 (direct): «تفعيل الإشعارات» و«تحقّقت» يطلبون الإذن على طول — لمسة المشرف داخل سند تفعّل هالصفحة.
+       الإذن موجود أو مرفوض ← بدون نافذة (ياخذ الاشتراك من جديد أو يرد «مرفوض»). ما فيه لمسة ← نافذتنا مثل قبل */
+    var act = !!(navigator.userActivation && navigator.userActivation.isActive);
+    if (d.direct && (Notification.permission !== 'default' || act)) { go(); return; }
+    box.classList.add('show');
+    n.onclick = function () { box.classList.remove('show'); reply({ sanad: 'push-token', ok: false, later: true }); };
+    y.onclick = function () { y.disabled = true; go(); };
   });
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });

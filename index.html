@@ -212,6 +212,22 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
   document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!hidAt) hidAt = Date.now(); } else back(); });
   window.addEventListener('pageshow', function (e) { if (e.persisted) back(); });
 
+  /* سند 9.40: «إعادة تشغيل سند» — سند (من داخل إطاره بس) يطلب: نرد «restart-r»، نمسح كاش الغلاف ونحدّث الـSW (بدون ما نلغيه — الإشعارات تبقى)،
+     وبعد ما تخلص حركة سند (wait) نفتح الصفحة من جديد على آخر نسخة منشورة. الرمز والمسوّدات داخل سند ما تنلمس */
+  var restarting = false;
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || d.sanad !== 'restart' || !e.source || !fromApp(e) || restarting) return;
+    restarting = true;
+    try { e.source.postMessage({ sanad: 'restart-r' }, '*'); } catch (x) {}
+    var wait = Math.min(Math.max(Number(d.wait) || 0, 0), 3000), t0 = Date.now(), gone = false;
+    var go = function () { if (gone) return; gone = true; try { location.reload(); } catch (x) { location.href = location.pathname; } };
+    var clean = Promise.resolve();
+    try { if (window.caches && caches.keys) clean = caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }); } catch (x) {}
+    try { if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) clean = clean.then(function () { return navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.update().catch(function () {}); })); }); }); } catch (x) {}
+    clean.catch(function () {}).then(function () { setTimeout(go, Math.max(0, wait - (Date.now() - t0))); });
+    setTimeout(go, wait + 2500);   // لو المسح علّق
+  });
+
   /* الاهتزاز: النظام داخل إطار قوقل يطلبه من هنا (المتصفح يمنعه داخل الإطارات) */
   /* إطار قوقل ممكن يوصل بأصل "null" (إطار معزول)، فنقبل الرسالة من أي مصدر —
      والمسموح فيها اهتزاز قصير بس، فما فيها أي خطر */

@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>دعوة عقيقة حمد</title>
+<script>/* ?v=um (أو #um): دعوة أم المولود بنصّها وألوانها */
+if (/[?&]v=um\b|#um\b/.test(location.search + location.hash)) document.documentElement.setAttribute('data-v', 'um');</script>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F7EFDD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,9 +15,21 @@
 /* لوحة ثابتة 1080×1920 (ستوري 9:16) تُصغَّر لتناسب أي شاشة:
    رأس (الآية + الاسم + نص الدعوة) ← بطاقة الخريطة والهبوط ← الموعد والاستقبال والختام */
 :root{
+  /* لوحة دعوة الأب: عاجي + أخضر زمردي + ذهبي */
   --ivory:#FDFAF2; --cream:#F7EFDD; --beige:#EDDFC1;
-  --gold:#B48A3C; --gold-hi:#DDBE78; --gold-deep:#8A6522;
-  --emerald:#0D4A3A; --emerald-deep:#07352A; --emerald-soft:#3F7062;
+  --accent:#B48A3C; --accent-hi:#DDBE78; --accent-deep:#8A6522; --accent-0:rgba(180,138,60,0);
+  --ink:#0D4A3A; --ink-deep:#07352A; --ink-soft:#3F7062;
+  --bg-a:#FFFEF9; --bg-a0:rgba(255,254,249,0); --bg-b:rgba(214,180,106,.34); --bg-b0:rgba(214,180,106,0);
+  --bg-1:#FCF8EE; --bg-2:#F6ECD7; --bg-3:#EDDDBD;
+  --glow-a:rgba(240,208,134,.40); --glow-a0:rgba(240,208,134,0); --glow-b:rgba(255,250,232,.75); --glow-b0:rgba(255,250,232,0);
+  --sheen:#CDA756;
+  --card:#EFE2C4; --card-ring:rgba(255,253,246,.9); --card-line:rgba(180,138,60,.5); --card-shadow:rgba(105,76,18,.55);
+  --chip:rgba(255,253,246,.78); --chip-line:rgba(180,138,60,.75);
+  --pulse:#DFB04A; --pulse-glow:rgba(223,176,74,.8); --pulse-edge:rgba(138,101,34,.28); --pulse-0:rgba(223,176,74,0); --pulse-fill:rgba(223,176,74,.34);
+  --pin-a:#17705A; --pin-b:#07352A; --pin-shadow:rgba(58,40,6,.42); --pin-drop:rgba(40,28,4,.28);
+  --label:rgba(255,253,246,.95); --label-line:rgba(180,138,60,.9); --label-shadow:rgba(90,62,10,.55);
+  --heart-shadow:rgba(138,101,34,.35);
+  --ui:rgba(13,74,58,.86); --ui-line:rgba(221,190,120,.7);
   --quran:'Amiri','Scheherazade New','Traditional Arabic','Times New Roman',serif;   /* الآية */
   --display:'El Messiri','Tajawal','Segoe UI',Tahoma,sans-serif;                     /* الاسم والعناوين */
   --text:'Tajawal','Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif;                  /* التفاصيل */
@@ -24,16 +38,35 @@
   --name-w:380px;         /* عرض الاسم؛ حجمه وموضعه يُضبطان تلقائياً حسب الخط */
   color-scheme:light;
 }
+/* لوحة دعوة الأم (?v=um): وردي هادئ + عنّابي + ذهبي وردي */
+:root[data-v="um"]{
+  --ivory:#FFFAF8; --cream:#FBEEEC; --beige:#F1D7D5;
+  --accent:#B8806E; --accent-hi:#E3B3A4; --accent-deep:#96574C; --accent-0:rgba(184,128,110,0);
+  --ink:#6A2145; --ink-deep:#4E1433; --ink-soft:#8C5470;
+  --bg-a:#FFFDFC; --bg-a0:rgba(255,253,252,0); --bg-b:rgba(226,160,150,.30); --bg-b0:rgba(226,160,150,0);
+  --bg-1:#FFF8F6; --bg-2:#FAEAE8; --bg-3:#F1D5D3;
+  --glow-a:rgba(240,180,170,.38); --glow-a0:rgba(240,180,170,0); --glow-b:rgba(255,246,244,.75); --glow-b0:rgba(255,246,244,0);
+  --sheen:#DDA493;
+  --card:#F3DAD6; --card-ring:rgba(255,250,248,.9); --card-line:rgba(184,128,110,.5); --card-shadow:rgba(110,50,60,.5);
+  --chip:rgba(255,250,248,.8); --chip-line:rgba(184,128,110,.75);
+  --pulse:#D9937F; --pulse-glow:rgba(217,147,127,.8); --pulse-edge:rgba(120,60,60,.28); --pulse-0:rgba(217,147,127,0); --pulse-fill:rgba(217,147,127,.34);
+  --pin-a:#93305F; --pin-b:#4E1433; --pin-shadow:rgba(60,14,34,.42); --pin-drop:rgba(50,10,28,.28);
+  --label:rgba(255,250,248,.95); --label-line:rgba(184,128,110,.9); --label-shadow:rgba(110,50,60,.5);
+  --heart-shadow:rgba(150,87,76,.35);
+  --ui:rgba(106,33,69,.86); --ui-line:rgba(227,179,164,.7);
+}
+/* كل نسخة تُظهر نصوصها فقط */
+:root[data-v="um"] [data-for="abu"],:root:not([data-v="um"]) [data-for="um"]{display:none!important}
 *{box-sizing:border-box}
 html{height:100%;background:var(--beige)}
-body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--emerald);font-family:var(--text);
+body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--ink);font-family:var(--text);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 
 #view{position:relative;width:100%;height:100%;overflow:hidden;
   background:
-    radial-gradient(90% 52% at 50% -6%, #FFFEF9 0%, rgba(255,254,249,0) 72%),
-    radial-gradient(75% 42% at 50% 108%, rgba(214,180,106,.34) 0%, rgba(214,180,106,0) 72%),
-    linear-gradient(180deg, #FCF8EE 0%, #F6ECD7 54%, #EDDDBD 100%)}
+    radial-gradient(90% 52% at 50% -6%, var(--bg-a) 0%, var(--bg-a0) 72%),
+    radial-gradient(75% 42% at 50% 108%, var(--bg-b) 0%, var(--bg-b0) 72%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 54%, var(--bg-3) 100%)}
 #dust{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 
 #stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;margin:-960px 0 0 -540px;
@@ -43,20 +76,20 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 /* إضاءة ذهبية هادئة */
 .glow{position:absolute;border-radius:50%;pointer-events:none}
 .glow.a{left:-110px;top:-190px;width:1300px;height:1300px;
-  background:radial-gradient(closest-side, rgba(240,208,134,.40), rgba(240,208,134,0));
+  background:radial-gradient(closest-side, var(--glow-a), var(--glow-a0));
   animation:breathe 6.5s ease-in-out infinite alternate}
 .glow.b{left:90px;top:1180px;width:900px;height:900px;
-  background:radial-gradient(closest-side, rgba(255,250,232,.75), rgba(255,250,232,0));
+  background:radial-gradient(closest-side, var(--glow-b), var(--glow-b0));
   animation:breathe 8s -3s ease-in-out infinite alternate}
 @keyframes breathe{from{opacity:.5;transform:scale(.9)}to{opacity:1;transform:scale(1.07)}}
 
 /* ── الإطار ── */
 #frame{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
-#frame path{fill:none;stroke:var(--gold);stroke-dasharray:1.01 2;stroke-dashoffset:1.01}
+#frame path{fill:none;stroke:var(--accent);stroke-dasharray:1.01 2;stroke-dashoffset:1.01}
 #frame .ln{stroke-width:2.5}
 #frame .hl{stroke-width:1;opacity:.55}
 #frame .st{stroke-width:2}
-#frame .dot{fill:var(--gold);opacity:0;transform-box:fill-box;transform-origin:center}
+#frame .dot{fill:var(--accent);opacity:0;transform-box:fill-box;transform-origin:center}
 .play #frame path{animation:draw var(--t,.7s) var(--d,0s) cubic-bezier(.5,0,.25,1) both}
 .play #frame .dot{animation:pop .5s var(--d,0s) cubic-bezier(.3,1.6,.5,1) both}
 @keyframes draw{to{stroke-dashoffset:0}}
@@ -67,10 +100,12 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 .play .head{animation:lift 1.1s 6.4s cubic-bezier(.65,0,.25,1) both}
 @keyframes lift{from{transform:translateY(310px)}to{transform:none}}
 
-.verse{margin:0;padding:0 24px;font:400 53px/1.9 var(--quran);color:var(--emerald);white-space:nowrap;opacity:0;
+.verse{margin:0;padding:0 24px;font:400 53px/1.9 var(--quran);color:var(--ink);white-space:nowrap;opacity:0;
   -webkit-mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat;
           mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat}
-.verse b{font-weight:400;color:var(--gold)}
+.verse b{font-weight:400;color:var(--accent)}
+.verse svg,.dua svg{display:inline-block;vertical-align:middle;fill:#fff;stroke:var(--accent);stroke-width:1.3;stroke-linejoin:round;filter:drop-shadow(0 2px 3px var(--heart-shadow))}
+.verse svg{width:34px;height:34px;margin-right:6px}
 .play .verse{animation:wipe 1.5s 2s cubic-bezier(.4,0,.2,1) both}
 @keyframes wipe{
   from{opacity:0;-webkit-mask-position:0 0;mask-position:0 0}
@@ -78,13 +113,13 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
   to{opacity:1;-webkit-mask-position:100% 0;mask-position:100% 0}}
 
 .title{margin:8px 0 0;font-weight:400;display:flex;flex-direction:column;align-items:center}
-.kicker{font:var(--dr) calc(50px * var(--ds))/75px var(--display);color:var(--gold-deep);opacity:0}
+.kicker{font:var(--dr) calc(50px * var(--ds))/75px var(--display);color:var(--accent-deep);opacity:0}
 .play .kicker{animation:slide 1.05s 2.75s cubic-bezier(.2,.75,.2,1) both}
 @keyframes slide{from{opacity:0;transform:translateX(90px)}to{opacity:1;transform:none}}
 .name{display:block;padding:0 80px;margin:-21px 0 -24px}
-.name>span{display:block;opacity:0;font:var(--db) 250px/.9 var(--display);color:var(--emerald-deep)}
+.name>span{display:block;opacity:0;font:var(--db) 250px/.9 var(--display);color:var(--ink-deep)}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
-  .name>span{background:linear-gradient(100deg,var(--emerald-deep) 0 42%,#CDA756 50%,var(--emerald-deep) 58% 100%) 0 0/300% 100%;
+  .name>span{background:linear-gradient(100deg,var(--ink-deep) 0 42%,var(--sheen) 50%,var(--ink-deep) 58% 100%) 0 0/300% 100%;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 }
 .play .name>span{animation:nameUp 1.25s 3.05s cubic-bezier(.16,.84,.24,1) both, sheen 2s 3.95s cubic-bezier(.4,0,.3,1) both}
@@ -93,48 +128,56 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 
 .rule{direction:ltr;display:flex;align-items:center;justify-content:center;gap:16px;height:22px}
 .rule i{display:block;width:170px;height:1.5px;transform:scaleX(0)}
-.rule i:first-child{background:linear-gradient(to left,var(--gold),rgba(180,138,60,0));transform-origin:100% 50%}
-.rule i:last-child{background:linear-gradient(to right,var(--gold),rgba(180,138,60,0));transform-origin:0 50%}
-.rule b{display:block;width:12px;height:12px;border:1.5px solid var(--gold);transform:rotate(45deg);opacity:0}
+.rule i:first-child{background:linear-gradient(to left,var(--accent),var(--accent-0));transform-origin:100% 50%}
+.rule i:last-child{background:linear-gradient(to right,var(--accent),var(--accent-0));transform-origin:0 50%}
+.rule b{display:block;width:12px;height:12px;border:1.5px solid var(--accent);transform:rotate(45deg);opacity:0}
 .play .rule i{animation:growX .95s 4.05s cubic-bezier(.3,.7,.2,1) both}
 .play .rule b{animation:gem .6s 3.95s cubic-bezier(.3,1.5,.5,1) both}
 @keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes gem{from{opacity:0;transform:rotate(45deg) scale(0)}to{opacity:1;transform:rotate(45deg) scale(1)}}
 
-.lead{margin:14px 0 0;font:var(--dr) calc(48px * var(--ds))/77px var(--display);color:var(--gold-deep);opacity:0}
+.lead{margin:14px 0 0;font:var(--dr) calc(48px * var(--ds))/77px var(--display);color:var(--accent-deep);opacity:0}
 .play .lead{animation:rise 1.1s 4.3s cubic-bezier(.2,.7,.2,1) both}
-.body{margin:4px 0 0;font:500 calc(40px * var(--ts))/69px var(--text);color:var(--emerald)}
+.body{margin:4px 0 0;font:500 calc(40px * var(--ts))/69px var(--text);color:var(--ink)}
 .body .l{display:block}
 .body .w{display:inline-block;opacity:0}
 .play .body .w{animation:rise .8s calc(5.05s + var(--i) * .085s) cubic-bezier(.2,.7,.2,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(24px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
 
 /* ── بطاقة الخريطة ── */
-.where{position:absolute;left:0;right:0;top:784px;margin:0;text-align:center;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
+.where{position:absolute;left:0;right:0;top:784px;margin:0;text-align:center;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--ink-soft);opacity:0}
 .play .where{animation:rise .9s 7.15s cubic-bezier(.2,.7,.2,1) both}
 .map{position:absolute;left:120px;top:848px;width:840px;height:352px;display:block;opacity:0;color:inherit;text-decoration:none}
 .play .map{animation:cardIn 1.05s 7.25s cubic-bezier(.2,.7,.2,1) both}
 @keyframes cardIn{from{opacity:0;transform:translateY(48px) scale(.94)}to{opacity:1;transform:none}}
-.mapclip{position:absolute;inset:0;border-radius:38px;overflow:hidden;background:#EFE2C4;
-  box-shadow:0 0 0 2px var(--gold),0 0 0 11px rgba(255,253,246,.9),0 0 0 12.5px rgba(180,138,60,.5),0 46px 70px -34px rgba(105,76,18,.55)}
+.mapclip{position:absolute;inset:0;border-radius:38px;overflow:hidden;background:var(--card);
+  box-shadow:0 0 0 2px var(--accent),0 0 0 11px var(--card-ring),0 0 0 12.5px var(--card-line),0 46px 70px -34px var(--card-shadow)}
 #mapcv{position:absolute;inset:0;width:100%;height:100%;display:block}
 .compass{position:absolute;left:24px;top:22px;width:56px;height:56px;border-radius:50%;
-  background:rgba(255,253,246,.78);box-shadow:0 0 0 1.5px rgba(180,138,60,.75)}
+  background:var(--chip);box-shadow:0 0 0 1.5px var(--chip-line)}
 .compass svg{position:absolute;inset:0;width:100%;height:100%}
 
 .ring{position:absolute;left:386px;top:144px;width:68px;height:68px;border-radius:50%;opacity:0;
-  border:4px solid #DFB04A;box-shadow:0 0 18px rgba(223,176,74,.8),0 0 0 1px rgba(138,101,34,.28),inset 0 0 0 1.5px rgba(255,255,255,.7);
-  background:radial-gradient(closest-side, rgba(223,176,74,0) 55%, rgba(223,176,74,.34))}
+  border:4px solid var(--pulse);box-shadow:0 0 18px var(--pulse-glow),0 0 0 1px var(--pulse-edge),inset 0 0 0 1.5px rgba(255,255,255,.7);
+  background:radial-gradient(closest-side, var(--pulse-0) 55%, var(--pulse-fill))}
 .play .ring{animation:pulse 2.6s var(--d) cubic-bezier(.15,.6,.3,1) infinite both}
 @keyframes pulse{0%{opacity:0;transform:scale(.2)}9%{opacity:1}100%{opacity:0;transform:scale(4.5)}}
 
 .pin{position:absolute;left:420px;top:178px;width:0;height:0;pointer-events:none}
 .pin .shadow{position:absolute;left:-24px;top:-8px;width:48px;height:16px;border-radius:50%;
-  background:rgba(58,40,6,.42);filter:blur(3px);opacity:0}
+  background:var(--pin-shadow);filter:blur(3px);opacity:0}
 .play .pin .shadow{animation:shadow .95s 10.1s both}
 @keyframes shadow{0%{opacity:0;transform:scale(.15)}52%{opacity:1;transform:scale(1.15)}70%{opacity:.7;transform:scale(.8)}86%,100%{opacity:1;transform:scale(1)}}
 .pin svg{position:absolute;left:-44px;top:-116px;width:88px;height:116px;transform-origin:50% 100%;opacity:0;
-  filter:drop-shadow(0 6px 8px rgba(40,28,4,.28))}
+  filter:drop-shadow(0 6px 8px var(--pin-drop))}
+#pinfill stop:first-child{stop-color:var(--pin-a)}
+#pinfill stop:last-child{stop-color:var(--pin-b)}
+.pin .drop{fill:url(#pinfill);stroke:var(--accent-hi);stroke-width:2.5;stroke-linejoin:round}
+.pin .eye{fill:var(--ivory)}
+.pin .star{fill:var(--accent)}
+#needle .n{fill:var(--ink)}
+#needle .s{fill:var(--accent-hi)}
+#needle .hub{fill:var(--ivory);stroke:var(--accent-deep);stroke-width:1}
 .play .pin svg{animation:drop .95s 10.1s both}
 @keyframes drop{
   0%{opacity:0;transform:translateY(-330px);animation-timing-function:cubic-bezier(.55,0,.9,.45)}
@@ -146,9 +189,9 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 
 .placewrap{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;pointer-events:none}
 .place{display:inline-flex;align-items:center;padding:8px 38px 10px;border-radius:999px;white-space:nowrap;opacity:0;
-  background:rgba(255,253,246,.95);box-shadow:0 0 0 1.5px rgba(180,138,60,.9),0 16px 26px -12px rgba(90,62,10,.55);
-  font:800 calc(45px * var(--ts))/68px var(--text);color:var(--emerald-deep)}
-.place em{font-style:normal;font-weight:500;color:var(--gold);margin:0 16px}
+  background:var(--label);box-shadow:0 0 0 1.5px var(--label-line),0 16px 26px -12px var(--label-shadow);
+  font:800 calc(45px * var(--ts))/68px var(--text);color:var(--ink-deep)}
+.place em{font-style:normal;font-weight:500;color:var(--accent);margin:0 16px}
 .play .place{animation:labelIn .8s 10.95s cubic-bezier(.2,.8,.2,1) both}
 @keyframes labelIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
 
@@ -156,36 +199,44 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 .foot{position:absolute;left:0;right:0;top:1254px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .when{display:flex;align-items:stretch;justify-content:center}
 .cell{width:370px;display:flex;flex-direction:column;align-items:center;opacity:0}
-.cell .k{display:inline-flex;align-items:center;gap:10px;font:500 calc(32px * var(--ts))/48px var(--text);color:var(--gold-deep)}
-.cell .k svg{width:30px;height:30px;fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.cell .v{font:800 calc(48px * var(--ts))/70px var(--text);color:var(--emerald-deep)}
-.sep{width:1.5px;background:linear-gradient(180deg,rgba(180,138,60,0),var(--gold),rgba(180,138,60,0));transform:scaleY(0)}
+.cell .k{display:inline-flex;align-items:center;gap:10px;font:500 calc(32px * var(--ts))/48px var(--text);color:var(--accent-deep)}
+.cell .k svg{width:30px;height:30px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cell .v{font:800 calc(48px * var(--ts))/70px var(--text);color:var(--ink-deep)}
+.sep{width:1.5px;background:linear-gradient(180deg,var(--accent-0),var(--accent),var(--accent-0));transform:scaleY(0)}
 .play .cell{animation:rise .85s var(--d) cubic-bezier(.2,.7,.2,1) both}
 .play .sep{animation:growY .7s 12.1s cubic-bezier(.3,.7,.2,1) both}
 @keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 
-.host{margin:24px 0 0;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
-.hostname{margin:-2px 0 0;font:var(--db) calc(60px * var(--ds))/84px var(--display);color:var(--emerald-deep);opacity:0}
-.tel{margin:-4px 0 2px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;font:500 calc(34px * var(--ts))/46px var(--text);color:var(--emerald-soft);opacity:0;font-variant-numeric:tabular-nums}
+.host{margin:24px 0 0;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--ink-soft);opacity:0}
+.hostname{margin:-2px 0 0;font:var(--db) calc(60px * var(--ds))/84px var(--display);color:var(--ink-deep);opacity:0}
+.tel{margin:-4px 0 2px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;font:500 calc(34px * var(--ts))/46px var(--text);color:var(--ink-soft);opacity:0;font-variant-numeric:tabular-nums}
 .tel[hidden]{display:none}
-.tel svg{width:28px;height:28px;fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:var(--db) calc(50px * var(--ds))/70px var(--display);color:var(--emerald-deep);opacity:0}
-.kin span{font:500 calc(33px * var(--ts))/46px var(--text);color:var(--emerald-soft)}
-.kin i{display:block;align-self:center;width:10px;height:10px;border:1.5px solid var(--gold);transform:rotate(45deg)}
-.closing{margin:12px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--gold-deep);opacity:0}
-.closing svg{width:36px;height:36px;flex:none;fill:#fff;stroke:var(--gold);stroke-width:1.3;stroke-linejoin:round;
-  filter:drop-shadow(0 2px 3px rgba(138,101,34,.35))}
-.sign{margin:0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--emerald);opacity:0}
-.sign b{font-weight:800;color:var(--emerald-deep)}
+.tel svg{width:28px;height:28px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:var(--db) calc(50px * var(--ds))/70px var(--display);color:var(--ink-deep);opacity:0}
+.kin span{font:500 calc(33px * var(--ts))/46px var(--text);color:var(--ink-soft)}
+.kin i{display:block;align-self:center;width:10px;height:10px;border:1.5px solid var(--accent);transform:rotate(45deg)}
+.closing{margin:12px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--accent-deep);opacity:0}
+.closing svg{width:36px;height:36px;flex:none;fill:#fff;stroke:var(--accent);stroke-width:1.3;stroke-linejoin:round;
+  filter:drop-shadow(0 2px 3px var(--heart-shadow))}
+.wish{margin:30px auto 0;max-width:800px;font:500 calc(37px * var(--ts))/58px var(--text);color:var(--ink);text-wrap:balance;opacity:0}
+.dua{margin:22px 0 0;font:var(--dr) calc(44px * var(--ds))/70px var(--display);color:var(--accent-deep);opacity:0}
+.dua svg{width:36px;height:36px;margin-right:4px}
+:root[data-v="um"] .sign{margin-top:18px;font-size:calc(40px * var(--ts))}
+:root[data-v="um"] .body{font-size:calc(38px * var(--ts))}
+.sign{margin:0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--ink);opacity:0}
+.sign b{font-weight:800;color:var(--ink-deep)}
 .sign::before,.sign::after{content:"";width:74px;height:1.5px}
-.sign::before{background:linear-gradient(to left,var(--gold),rgba(180,138,60,0))}
-.sign::after{background:linear-gradient(to right,var(--gold),rgba(180,138,60,0))}
+.sign::before{background:linear-gradient(to left,var(--accent),var(--accent-0))}
+.sign::after{background:linear-gradient(to right,var(--accent),var(--accent-0))}
 .play .host{animation:rise .9s 12.65s cubic-bezier(.2,.7,.2,1) both}
 .play .hostname{animation:rise .95s 12.9s cubic-bezier(.2,.7,.2,1) both}
 .play .tel{animation:rise .9s 13.1s cubic-bezier(.2,.7,.2,1) both}
 .play .kin{animation:rise .9s 13.35s cubic-bezier(.2,.7,.2,1) both}
 .play .closing{animation:rise .9s 13.8s cubic-bezier(.2,.7,.2,1) both}
 .play .closing svg{animation:beat 1.7s 14.6s ease-in-out infinite both}
+.play .wish{animation:rise .9s 12.7s cubic-bezier(.2,.7,.2,1) both}
+.play .dua{animation:rise .95s 13.3s cubic-bezier(.2,.7,.2,1) both}
+.play .dua svg{animation:beat 1.7s 14.6s ease-in-out infinite both}
 .play .sign{animation:rise .8s 14.15s cubic-bezier(.2,.7,.2,1) both}
 @keyframes beat{0%,36%,100%{transform:scale(1)}14%{transform:scale(1.2)}26%{transform:scale(.96)}}
 
@@ -193,14 +244,14 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 #ui{position:fixed;z-index:10;top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px));
   display:flex;align-items:center;gap:8px;direction:ltr;opacity:0;pointer-events:none;transition:opacity .3s}
 #ui.on{opacity:1;pointer-events:auto}
-#ui button{width:42px;height:42px;padding:0;border-radius:50%;border:1px solid rgba(221,190,120,.7);
-  background:rgba(13,74,58,.86);color:var(--ivory);display:grid;place-items:center;cursor:pointer}
+#ui button{width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--ui-line);
+  background:var(--ui);color:var(--ivory);display:grid;place-items:center;cursor:pointer}
 #ui [hidden]{display:none}
 #snd .off,#snd.muted .on{display:none}
 #snd.muted .off{display:inline}
-#hint{direction:rtl;white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid rgba(221,190,120,.7);
-  background:rgba(13,74,58,.86);color:var(--ivory);font:500 13px/1.2 var(--text)}
-#ui button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
+#hint{direction:rtl;white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid var(--ui-line);
+  background:var(--ui);color:var(--ivory);font:500 13px/1.2 var(--text)}
+#ui button:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
 #ui svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
@@ -215,16 +266,22 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
     <svg id="frame" viewBox="0 0 1080 1920" aria-hidden="true"></svg>
 
     <header class="head">
-      <p class="verse"><b>﴿</b>الْمَالُ وَالْبَنُونَ زِينَةُ الْحَيَاةِ الدُّنْيَا<b>﴾</b></p>
+      <p class="verse" data-for="abu"><b>﴿</b>الْمَالُ وَالْبَنُونَ زِينَةُ الْحَيَاةِ الدُّنْيَا<b>﴾</b></p>
+      <p class="verse" data-for="um">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
       <h1 class="title">
         <span class="kicker">دعوة عقيقة المولود</span>
         <span class="name"><span>حمد</span></span>
       </h1>
       <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
-      <p class="lead">تماماً للفرحة واكتمالاً للسرور..</p>
-      <p class="body">
+      <p class="lead" data-for="abu">تماماً للفرحة واكتمالاً للسرور..</p>
+      <p class="body" data-for="abu">
         <span class="l">يسرّني ويشرفني دعوتكم لمشاركتنا الفرحة</span>
         <span class="l">وتناول طعام العقيقة.</span>
+      </p>
+      <p class="lead" data-for="um">بفضل الله وكرمه</p>
+      <p class="body" data-for="um">
+        <span class="l">أتشرف بدعوتكم لحضور عقيقة مولودي الغالي حمد</span>
+        <span class="l">ومشاركتنا فرحتنا بهذه المناسبة</span>
       </p>
     </header>
 
@@ -241,19 +298,19 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
           <svg viewBox="0 0 88 116">
             <defs>
               <linearGradient id="pinfill" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#17705A"/><stop offset="1" stop-color="#07352A"/>
+                <stop offset="0"/><stop offset="1"/>
               </linearGradient>
             </defs>
-            <path d="M44 113 C31 91 9 71 9 43 A35 35 0 1 1 79 43 C79 71 57 91 44 113 Z" fill="url(#pinfill)" stroke="#DDBE78" stroke-width="2.5" stroke-linejoin="round"/>
-            <circle cx="44" cy="43" r="17" fill="#FDFAF2"/>
-            <path d="M44 31 L47.5 34.5 L52.5 34.5 L52.5 39.5 L56 43 L52.5 46.5 L52.5 51.5 L47.5 51.5 L44 55 L40.5 51.5 L35.5 51.5 L35.5 46.5 L32 43 L35.5 39.5 L35.5 34.5 L40.5 34.5 Z" fill="#B48A3C"/>
+            <path d="M44 113 C31 91 9 71 9 43 A35 35 0 1 1 79 43 C79 71 57 91 44 113 Z" class="drop"/>
+            <circle cx="44" cy="43" r="17" class="eye"/>
+            <path d="M44 31 L47.5 34.5 L52.5 34.5 L52.5 39.5 L56 43 L52.5 46.5 L52.5 51.5 L47.5 51.5 L44 55 L40.5 51.5 L35.5 51.5 L35.5 46.5 L32 43 L35.5 39.5 L35.5 34.5 L40.5 34.5 Z" class="star"/>
           </svg>
         </div>
         <div class="compass" aria-hidden="true">
           <svg viewBox="0 0 56 56" id="needle">
-            <path d="M28 9 L34 28 L22 28 Z" fill="#0D4A3A"/>
-            <path d="M28 47 L34 28 L22 28 Z" fill="#DDBE78"/>
-            <circle cx="28" cy="28" r="2.6" fill="#FDFAF2" stroke="#8A6522" stroke-width="1"/>
+            <path d="M28 9 L34 28 L22 28 Z" class="n"/>
+            <path d="M28 47 L34 28 L22 28 Z" class="s"/>
+            <circle cx="28" cy="28" r="2.6" class="hub"/>
           </svg>
         </div>
       </div>
@@ -272,12 +329,14 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
           <span class="v">بعد صلاة الظهر</span>
         </div>
       </div>
-      <p class="host">في استقبالكم نيابةً عني والدي الغالي</p>
-      <p class="hostname">أحمد نعمان سعيد</p>
-      <p class="tel" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.7l1.4 4-2 1.5a12 12 0 0 0 6.3 6.3l1.5-2 4 1.4v2.7a2 2 0 0 1-2.2 2C10.9 18.8 5.2 13.1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><bdi dir="ltr"></bdi></p>
-      <p class="kin"><span>وأبناء عمي</span>محمد أمين<i aria-hidden="true"></i>نبيل أمين</p>
-      <p class="closing"><span>حضوركم تشريف، وفرحتنا تكتمل بوجودكم</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
-      <p class="sign"><span>الداعي: <b>أبو سند</b></span></p>
+      <p class="host" data-for="abu">في استقبالكم نيابةً عني والدي الغالي</p>
+      <p class="hostname" data-for="abu">أحمد نعمان سعيد</p>
+      <p class="tel" data-for="abu" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.7l1.4 4-2 1.5a12 12 0 0 0 6.3 6.3l1.5-2 4 1.4v2.7a2 2 0 0 1-2.2 2C10.9 18.8 5.2 13.1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><bdi dir="ltr"></bdi></p>
+      <p class="kin" data-for="abu"><span>وأبناء عمي</span>محمد أمين<i aria-hidden="true"></i>نبيل أمين</p>
+      <p class="closing" data-for="abu"><span>حضوركم تشريف، وفرحتنا تكتمل بوجودكم</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
+      <p class="wish" data-for="um">حضوركم يسعدنا، ودعواتكم له بالصلاح والبركة والعمر المديد</p>
+      <p class="dua" data-for="um">اللهم أنبته نباتًا حسنًا،<br>واجعله من مواليد السعادة والبركة. <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
+      <p class="sign"><span data-for="abu">الداعي: <b>أبو سند</b></span><span data-for="um"><b>أم سند</b></span></p>
     </footer>
   </div>
 </div>
@@ -304,6 +363,27 @@ const DURATION = 15000;   // مدة الحركة
 const HOLD     = 3000;    // ثبات البطاقة كاملة قبل الإعادة
 const FADE     = 600;
 const CAPTURE  = /[?&]capture\b/.test(location.search);
+const UM       = document.documentElement.getAttribute('data-v') === 'um';   // دعوة أم المولود
+if (UM) { document.title = 'دعوة أم سند لعقيقة حمد'; const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = '#FBEEEC'; }
+
+/* ألوان ما يُرسم على اللوحتين (جزيئات الضوء والخريطة) لكل نسخة */
+const C = UM ? {
+  mote: ['rgba(255,244,240,1)', 'rgba(236,178,164,.55)', 'rgba(226,160,150,0)'],
+  base: ['#FCEFEC', '#EFD2CE'], grid: 'rgba(170,108,96,.17)', hill: 'rgba(122,40,84,.05)', contour: 'rgba(176,114,100,.5)',
+  wadi: 'rgba(255,255,255,.42)', wadiLine: 'rgba(140,84,112,.3)',
+  field: ['rgba(122,40,84,.17)', 'rgba(122,40,84,.09)', 'rgba(214,150,130,.3)'], hatch: 'rgba(122,40,84,.2)', fieldEdge: 'rgba(150,92,82,.5)',
+  tree: 'rgba(122,40,84,.3)', roadEdge: 'rgba(176,114,100,.9)', road: '#FFFBF9', house: 'rgba(106,33,69,.6)',
+  halo: ['rgba(236,172,152,.6)', 'rgba(236,172,152,0)'], home: '#DDA493', homeEdge: '#4E1433',
+  haze: '255,250,248', edge: ['rgba(96,36,48,0)', 'rgba(96,36,48,.22)'],
+} : {
+  mote: ['rgba(255,246,220,1)', 'rgba(236,200,122,.55)', 'rgba(226,186,104,0)'],
+  base: ['#F7EED8', '#E9D8B2'], grid: 'rgba(160,120,44,.17)', hill: 'rgba(22,96,72,.052)', contour: 'rgba(160,120,44,.5)',
+  wadi: 'rgba(255,255,255,.4)', wadiLine: 'rgba(63,112,98,.3)',
+  field: ['rgba(22,96,72,.2)', 'rgba(22,96,72,.11)', 'rgba(196,156,74,.26)'], hatch: 'rgba(22,96,72,.22)', fieldEdge: 'rgba(140,104,34,.5)',
+  tree: 'rgba(22,96,72,.36)', roadEdge: 'rgba(166,124,44,.9)', road: '#FFFDF4', house: 'rgba(13,74,58,.62)',
+  halo: ['rgba(232,196,110,.6)', 'rgba(232,196,110,0)'], home: '#D3AB56', homeEdge: '#07352A',
+  haze: '255,252,243', edge: ['rgba(96,66,14,0)', 'rgba(96,66,14,.24)'],
+};
 
 const $ = s => document.querySelector(s);
 const view = $('#view'), stage = $('#stage'), ui = $('#ui');
@@ -345,13 +425,13 @@ const prng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ 
   if (v) { el.querySelector('bdi').textContent = v; el.hidden = false; } })();
 
 /* ── نص الدعوة: كل كلمة تظهر بعد أختها ── */
-(() => { let i = 0;
-  document.querySelectorAll('.body .l').forEach(l => {
+document.querySelectorAll('.body').forEach(body => { let i = 0;
+  body.querySelectorAll('.l').forEach(l => {
     const words = l.textContent.trim().split(/\s+/); l.textContent = '';
     words.forEach((w, k) => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w;
       s.style.setProperty('--i', i++); l.appendChild(s); if (k < words.length - 1) l.appendChild(document.createTextNode(' ')); });
   });
-})();
+});
 
 /* ── الاسم: يُضبط حجمه ليملأ العرض المطلوب، ويُحسب موضع حبره ليبقى التباعد ثابتاً مع أي خط ── */
 function fitName() {
@@ -372,7 +452,7 @@ function fitName() {
 const dcv = $('#dust'), dx = dcv.getContext('2d');
 const mote = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
   const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  gr.addColorStop(0, 'rgba(255,246,220,1)'); gr.addColorStop(.35, 'rgba(236,200,122,.55)'); gr.addColorStop(1, 'rgba(226,186,104,0)');
+  gr.addColorStop(0, C.mote[0]); gr.addColorStop(.35, C.mote[1]); gr.addColorStop(1, C.mote[2]);
   g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c; })();
 const motes = (() => { const r = prng(7), a = [];
   for (let i = 0; i < 58; i++) { const big = i < 8;
@@ -493,7 +573,7 @@ function drawMap(t) {
 
   c.setTransform(mk, 0, 0, mk, 0, 0);
   const base = c.createLinearGradient(0, 0, MW, MH);
-  base.addColorStop(0, '#F7EED8'); base.addColorStop(1, '#E9D8B2');
+  base.addColorStop(0, C.base[0]); base.addColorStop(1, C.base[1]);
   c.fillStyle = base; c.fillRect(0, 0, MW, MH);
 
   c.translate(OX, OY); c.rotate(rot); c.scale(z, z);
@@ -503,36 +583,36 @@ function drawMap(t) {
   c.beginPath();
   const G = 600, n = Math.ceil(vr / G);
   for (let i = -n; i <= n; i++) { c.moveTo(i * G, -vr); c.lineTo(i * G, vr); c.moveTo(-vr, i * G); c.lineTo(vr, i * G); }
-  c.strokeStyle = 'rgba(160,120,44,.17)'; c.lineWidth = px; c.stroke();
+  c.strokeStyle = C.grid; c.lineWidth = px; c.stroke();
 
   // الجبال
-  c.fillStyle = 'rgba(22,96,72,.052)'; c.strokeStyle = 'rgba(160,120,44,.5)'; c.lineWidth = 1.2 * px;
+  c.fillStyle = C.hill; c.strokeStyle = C.contour; c.lineWidth = 1.2 * px;
   for (const h of world.hills) {
     if (Math.hypot(h.x, h.y) - h.rad * 1.5 > vr) continue;
     h.rings.forEach((ring, k) => { c.fill(ring); if (z > .3 || k % 2 === 0) c.stroke(ring); });
   }
 
   // الوادي
-  c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = Math.max(34, 2.5 * px); c.stroke(world.wadi);
-  c.strokeStyle = 'rgba(63,112,98,.3)'; c.lineWidth = 1.1 * px; c.setLineDash([14 * px, 10 * px]); c.stroke(world.wadi); c.setLineDash([]);
+  c.strokeStyle = C.wadi; c.lineWidth = Math.max(34, 2.5 * px); c.stroke(world.wadi);
+  c.strokeStyle = C.wadiLine; c.lineWidth = 1.1 * px; c.setLineDash([14 * px, 10 * px]); c.stroke(world.wadi); c.setLineDash([]);
 
   // الحقول (تظهر مع الاقتراب)
   const near = smooth(.26, .6, z);
   if (near > 0) {
     c.globalAlpha = near;
     for (const f of world.fields) {
-      c.fillStyle = f.kind === 0 ? 'rgba(22,96,72,.2)' : f.kind === 1 ? 'rgba(22,96,72,.11)' : 'rgba(196,156,74,.26)'; c.fill(f.path);
-      c.strokeStyle = 'rgba(22,96,72,.22)'; c.lineWidth = px; c.stroke(f.hatch);
-      c.strokeStyle = 'rgba(140,104,34,.5)'; c.lineWidth = 1.1 * px; c.stroke(f.path);
+      c.fillStyle = C.field[f.kind]; c.fill(f.path);
+      c.strokeStyle = C.hatch; c.lineWidth = px; c.stroke(f.hatch);
+      c.strokeStyle = C.fieldEdge; c.lineWidth = 1.1 * px; c.stroke(f.path);
     }
-    c.fillStyle = 'rgba(22,96,72,.36)'; c.fill(world.trees);
+    c.fillStyle = C.tree; c.fill(world.trees);
     c.globalAlpha = 1;
   }
 
   // الطرق
   const road = (path, w, alpha) => { c.globalAlpha = alpha;
-    c.strokeStyle = 'rgba(166,124,44,.9)'; c.lineWidth = Math.max(w + 3.2, 3.4 * px); c.stroke(path);
-    c.strokeStyle = '#FFFDF4'; c.lineWidth = Math.max(w, 1.9 * px); c.stroke(path); };
+    c.strokeStyle = C.roadEdge; c.lineWidth = Math.max(w + 3.2, 3.4 * px); c.stroke(path);
+    c.strokeStyle = C.road; c.lineWidth = Math.max(w, 1.9 * px); c.stroke(path); };
   const mid = smooth(.18, .4, z);
   if (mid > 0) world.side.forEach(s => road(s, 9, mid));
   road(world.main, 15, 1);
@@ -542,20 +622,20 @@ function drawMap(t) {
   // القرية والبيت
   if (near > 0) {
     c.globalAlpha = near;
-    c.fillStyle = 'rgba(13,74,58,.62)';
+    c.fillStyle = C.house;
     for (const b of world.houses) c.fill(b.path);
     const halo = c.createRadialGradient(0, 0, 0, 0, 0, 74);
-    halo.addColorStop(0, 'rgba(232,196,110,.6)'); halo.addColorStop(1, 'rgba(232,196,110,0)');
+    halo.addColorStop(0, C.halo[0]); halo.addColorStop(1, C.halo[1]);
     c.fillStyle = halo; c.fillRect(-74, -74, 148, 148);
-    c.fillStyle = '#D3AB56'; c.fill(world.home);
-    c.strokeStyle = '#07352A'; c.lineWidth = 1.6; c.stroke(world.home);
+    c.fillStyle = C.home; c.fill(world.home);
+    c.strokeStyle = C.homeEdge; c.lineWidth = 1.6; c.stroke(world.home);
     c.globalAlpha = 1;
   }
 
   // السحاب والضباب: تكبر وتتفرّق كلما اقتربت الكاميرا ثم تختفي
   c.setTransform(mk, 0, 0, mk, 0, 0);
   const haze = .52 * Math.pow(1 - e, 1.5);
-  if (haze > .004) { c.fillStyle = `rgba(255,252,243,${haze})`; c.fillRect(0, 0, MW, MH); }
+  if (haze > .004) { c.fillStyle = `rgba(${C.haze},${haze})`; c.fillRect(0, 0, MW, MH); }
   if (e < .64) for (const cl of clouds) {
     const u = (cl.d - e) / cl.d; if (u <= 0) continue;
     const s = 1 / (Math.pow(u, .9) + .04), w = cl.w * s, h = w * .62;
@@ -566,7 +646,7 @@ function drawMap(t) {
 
   // تظليل الأطراف ولمعة علوية
   const vg = c.createRadialGradient(OX, OY, 130, OX, OY, 520);
-  vg.addColorStop(0, 'rgba(96,66,14,0)'); vg.addColorStop(1, 'rgba(96,66,14,.24)');
+  vg.addColorStop(0, C.edge[0]); vg.addColorStop(1, C.edge[1]);
   c.fillStyle = vg; c.fillRect(0, 0, MW, MH);
   const sh = c.createLinearGradient(0, 0, 0, MH * .45);
   sh.addColorStop(0, 'rgba(255,255,255,.2)'); sh.addColorStop(1, 'rgba(255,255,255,0)');

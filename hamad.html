@@ -562,13 +562,13 @@ function drawMap(t) {
   needle.style.transform = `rotate(${rot}rad)`;
 }
 
-/* ── المؤثرات الصوتية: نغمات نظيفة قليلة تُركَّب بالكود (بدون ضجيج وبدون موسيقى) وتُعزف متزامنة مع اللوحة ── */
+/* ── الصوت: دقّة سقوط الدبوس ونبضة واحدة بعدها فقط، تُركَّب بالكود وتُعزف متزامنة مع اللوحة ── */
 const SR = 44100, A_LEN = (DURATION + HOLD) / 1000;
 function score(ac) {
   const out = ac.createDynamicsCompressor();
   out.threshold.value = -16; out.knee.value = 12; out.ratio.value = 3; out.attack.value = .003; out.release.value = .18;
   out.connect(ac.destination);
-  // صدى خفيف يعطي النغمات اتساعاً
+  // صدى خفيف
   const r = prng(31), ir = ac.createBuffer(2, Math.round(SR * 1.7), SR);
   for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < d.length; i++) d[i] = (r() * 2 - 1) * Math.pow(1 - i / d.length, 3.4); }
   const verb = ac.createConvolver(), wet = ac.createGain(); verb.buffer = ir; wet.gain.value = .5; verb.connect(wet); wet.connect(out);
@@ -581,35 +581,10 @@ function score(ac) {
     a.gain.exponentialRampToValueAtTime(.0001, t + dur);
     p.pan.value = o.pan || 0; w.gain.value = o.send === undefined ? .2 : o.send;
     s.connect(a); a.connect(p); p.connect(out); p.connect(w); w.connect(verb); s.start(t); s.stop(t + dur + .05); };
-  const glint = (t, f, g, pan) => { tone(t, f, f, .8, g, { pan, send: .7 }); tone(t, f * 2.76, f * 2.76, .3, g * .22, { pan, send: .7 }); };   // لمعة جرس صغيرة
-  const tap = (t, g, pan) => tone(t, 620, 430, .07, g, { type: 'triangle', pan, send: .25 });                                             // نقرة خشبية ناعمة
-
-  // 0–2: لمعة عند كل نجمة من نجمات الإطار
-  glint(.05, 2093, .1, 0); glint(.62, 2217, .08, -.7); glint(.64, 2217, .08, .7);
-  glint(1.22, 2093, .075, -.7); glint(1.24, 2093, .075, .7); glint(1.62, 2349, .1, 0);
-  // 2–4: الآية ثم الاسم يصعد بدفء
-  glint(2.08, 1568, .06, .4);
-  tap(2.78, .1, .3);
-  tone(3.05, 98, 147, 1.3, .13, { att: .55, glide: .9, send: .1 }); tone(3.05, 196, 294, 1.2, .1, { att: .55, glide: .9, send: .15 });
-  glint(3.98, 1760, .12, 0); glint(4.07, 2637, .04, 0);
-  // 4–7: نص الدعوة
-  tap(4.33, .09, 0);
-  // 7–12: البطاقة ثم نغمة نزول هادئة ترافق الهبوط من السماء
-  tone(7.27, 190, 95, .26, .32, { send: .1 }); tone(7.27, 380, 250, .09, .12, { type: 'triangle', send: .1 });
-  { const t = D0 / 1000, d = (D1 - D0) / 1000;
-    tone(t, 392, 131, d + .5, .12, { att: d * .5, glide: d + .1, send: .5 });
-    tone(t, 784, 262, d + .3, .035, { att: d * .5, glide: d + .1, send: .5 }); }
-  // الدبوس: ارتطام وارتدادة، ثم ثلاث نبضات رادار واسم الموقع
+  // الصوت الوحيد: ارتطام الدبوس بالموقع وارتدادته الخفيفة، ثم نبضة رادار واحدة
   tone(10.595, 170, 52, .36, .6, { send: .12 }); tone(10.595, 340, 170, .1, .34, { type: 'triangle', send: .12 }); tone(10.595, 900, 520, .035, .14, { send: .1 });
   tone(10.917, 150, 70, .16, .2, { send: .1 }); tone(10.917, 300, 160, .06, .1, { type: 'triangle', send: .1 });
-  [[10.62, .26], [11.47, .18], [12.33, .12]].forEach(([t, g]) => { tone(t, 880, 852, 1, g, { send: .8, att: .008 }); tone(t, 1760, 1704, .5, g * .14, { send: .8 }); });
-  tone(10.95, 480, 760, .11, .24, { glide: .08, send: .3 });
-  // 12–15: الموعد والاستقبال والختام، ونبضتا قلب
-  tap(12.02, .1, .45); tap(12.24, .1, -.45); tap(12.92, .09, 0); tap(13.27, .07, 0); tap(14.17, .07, 0);
-  [14.82, 16.52].forEach((t, i) => { const g = i ? .16 : .24;
-    tone(t, 120, 72, .16, g, { send: .1 }); tone(t, 240, 150, .09, g * .4, { send: .1 });
-    tone(t + .21, 105, 66, .15, g * .7, { send: .1 }); tone(t + .21, 210, 135, .08, g * .28, { send: .1 }); });
-  glint(15, 2093, .07, 0);
+  tone(10.62, 880, 852, 1, .26, { send: .8, att: .008 }); tone(10.62, 1760, 1704, .5, .036, { send: .8 });
 }
 const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
 const audio = !OAC ? Promise.resolve(null) : new Promise((res, rej) => {
@@ -617,7 +592,7 @@ const audio = !OAC ? Promise.resolve(null) : new Promise((res, rej) => {
   off.oncomplete = e => res(e.renderedBuffer); const p = off.startRendering(); if (p && p.then) p.then(res, rej);
 }).then(buf => { let pk = 0;                                   // توحيد مستوى الصوت
   for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch); for (let i = 0; i < d.length; i++) pk = Math.max(pk, Math.abs(d[i])); }
-  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch), k = .85 / (pk || 1); for (let i = 0; i < d.length; i++) d[i] *= k; }
+  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch), k = .7 / (pk || 1); for (let i = 0; i < d.length; i++) d[i] *= k; }
   abuf = buf; if (actx && started && !frozen && !asrc) playAudio((performance.now() - t0) / 1000); return buf;
 }).catch(() => null);
 let abuf = null, actx = null, again = null, asrc = null, soundOn = true;

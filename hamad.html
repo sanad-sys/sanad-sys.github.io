@@ -105,7 +105,9 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--in
           mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat}
 .verse b{font-weight:400;color:var(--accent)}
 .verse svg,.dua svg{display:inline-block;vertical-align:middle;fill:#fff;stroke:var(--accent);stroke-width:1.3;stroke-linejoin:round;filter:drop-shadow(0 2px 3px var(--heart-shadow))}
-.verse svg{width:34px;height:34px;margin-right:6px}
+.verse svg{position:absolute;left:20px;top:50%;width:34px;height:34px;margin-top:-17px}
+/* البسملة: القلب في الهامش حتى يبقى النص في المنتصف، وهامش علوي/سفلي حتى لا يقصّ القناع أطراف الحروف */
+:root[data-v="um"] .verse{position:relative;padding:8px 66px;margin-top:-8px;margin-bottom:-8px}
 .play .verse{animation:wipe 1.5s 2s cubic-bezier(.4,0,.2,1) both}
 @keyframes wipe{
   from{opacity:0;-webkit-mask-position:0 0;mask-position:0 0}

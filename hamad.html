@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#F7EFDD">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&family=El+Messiri:wght@500;700&family=Tajawal:wght@500;800&display=swap">
 <style>
 /* لوحة ثابتة 1080×1920 (ستوري 9:16) تُصغَّر لتناسب أي شاشة:
    رأس (الآية + الاسم + نص الدعوة) ← بطاقة الخريطة والهبوط ← الموعد والاستقبال والختام */
@@ -16,13 +16,17 @@
   --ivory:#FDFAF2; --cream:#F7EFDD; --beige:#EDDFC1;
   --gold:#B48A3C; --gold-hi:#DDBE78; --gold-deep:#8A6522;
   --emerald:#0D4A3A; --emerald-deep:#07352A; --emerald-soft:#3F7062;
-  --serif:'Amiri','Scheherazade New','Traditional Arabic','Times New Roman',serif;
-  --sans:'Tajawal','Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif;
+  --quran:'Amiri','Scheherazade New','Traditional Arabic','Times New Roman',serif;   /* الآية */
+  --display:'El Messiri','Tajawal','Segoe UI',Tahoma,sans-serif;                     /* الاسم والعناوين */
+  --text:'Tajawal','Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif;                  /* التفاصيل */
+  --dr:500; --db:700;     /* وزن العناوين: عادي / عريض */
+  --ds:.88; --ts:1;       /* تكبير/تصغير خط العناوين والتفاصيل */
+  --name-w:380px;         /* عرض الاسم؛ حجمه وموضعه يُضبطان تلقائياً حسب الخط */
   color-scheme:light;
 }
 *{box-sizing:border-box}
 html{height:100%;background:var(--beige)}
-body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--emerald);font-family:var(--sans);
+body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--emerald);font-family:var(--text);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 
 #view{position:relative;width:100%;height:100%;overflow:hidden;
@@ -59,11 +63,11 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 @keyframes pop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
 
 /* ── الرأس ── */
-.head{position:absolute;left:0;right:0;top:156px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.head{position:absolute;left:0;right:0;top:166px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .play .head{animation:lift 1.1s 6.4s cubic-bezier(.65,0,.25,1) both}
 @keyframes lift{from{transform:translateY(310px)}to{transform:none}}
 
-.verse{margin:0;padding:0 24px;font:400 53px/1.9 var(--serif);color:var(--emerald);white-space:nowrap;opacity:0;
+.verse{margin:0;padding:0 24px;font:400 53px/1.9 var(--quran);color:var(--emerald);white-space:nowrap;opacity:0;
   -webkit-mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat;
           mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat}
 .verse b{font-weight:400;color:var(--gold)}
@@ -74,17 +78,17 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
   to{opacity:1;-webkit-mask-position:100% 0;mask-position:100% 0}}
 
 .title{margin:8px 0 0;font-weight:400;display:flex;flex-direction:column;align-items:center}
-.kicker{font:400 50px/1.5 var(--serif);color:var(--gold-deep);opacity:0}
+.kicker{font:var(--dr) calc(50px * var(--ds))/75px var(--display);color:var(--gold-deep);opacity:0}
 .play .kicker{animation:slide 1.05s 2.75s cubic-bezier(.2,.75,.2,1) both}
 @keyframes slide{from{opacity:0;transform:translateX(90px)}to{opacity:1;transform:none}}
-.name{display:block;overflow:hidden;padding:0 80px 20px;margin:-21px 0 -24px}
-.name>span{display:block;opacity:0;font:700 250px/.9 var(--serif);color:var(--emerald-deep)}
+.name{display:block;padding:0 80px;margin:-21px 0 -24px}
+.name>span{display:block;opacity:0;font:var(--db) 250px/.9 var(--display);color:var(--emerald-deep)}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){
   .name>span{background:linear-gradient(100deg,var(--emerald-deep) 0 42%,#CDA756 50%,var(--emerald-deep) 58% 100%) 0 0/300% 100%;
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 }
 .play .name>span{animation:nameUp 1.25s 3.05s cubic-bezier(.16,.84,.24,1) both, sheen 2s 3.95s cubic-bezier(.4,0,.3,1) both}
-@keyframes nameUp{from{opacity:0;transform:translateY(100%)}15%{opacity:1}to{opacity:1;transform:none}}
+@keyframes nameUp{from{opacity:0;transform:translateY(var(--rise,100%))}15%{opacity:1}to{opacity:1;transform:none}}
 @keyframes sheen{from{background-position:0 0}to{background-position:100% 0}}
 
 .rule{direction:ltr;display:flex;align-items:center;justify-content:center;gap:16px;height:22px}
@@ -97,9 +101,9 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 @keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes gem{from{opacity:0;transform:rotate(45deg) scale(0)}to{opacity:1;transform:rotate(45deg) scale(1)}}
 
-.lead{margin:14px 0 0;font:400 48px/1.6 var(--serif);color:var(--gold-deep);opacity:0}
+.lead{margin:14px 0 0;font:var(--dr) calc(48px * var(--ds))/77px var(--display);color:var(--gold-deep);opacity:0}
 .play .lead{animation:rise 1.1s 4.3s cubic-bezier(.2,.7,.2,1) both}
-.body{margin:4px 0 0;font:500 40px/1.72 var(--sans);color:var(--emerald)}
+.body{margin:4px 0 0;font:500 calc(40px * var(--ts))/69px var(--text);color:var(--emerald)}
 .body .l{display:block}
 .body .w{display:inline-block;opacity:0}
 .play .body .w{animation:rise .8s calc(5.05s + var(--i) * .085s) cubic-bezier(.2,.7,.2,1) both}
@@ -141,7 +145,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 .placewrap{position:absolute;left:0;right:0;top:272px;display:flex;justify-content:center;pointer-events:none}
 .place{display:inline-flex;align-items:center;padding:8px 38px 10px;border-radius:999px;white-space:nowrap;opacity:0;
   background:rgba(255,253,246,.95);box-shadow:0 0 0 1.5px rgba(180,138,60,.9),0 16px 26px -12px rgba(90,62,10,.55);
-  font:800 45px/1.5 var(--sans);color:var(--emerald-deep)}
+  font:800 calc(45px * var(--ts))/68px var(--text);color:var(--emerald-deep)}
 .place em{font-style:normal;font-weight:500;color:var(--gold);margin:0 16px}
 .play .place{animation:labelIn .8s 10.95s cubic-bezier(.2,.8,.2,1) both}
 @keyframes labelIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
@@ -150,23 +154,23 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 .foot{position:absolute;left:0;right:0;top:1286px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .when{display:flex;align-items:stretch;justify-content:center}
 .cell{width:370px;display:flex;flex-direction:column;align-items:center;opacity:0}
-.cell .k{display:inline-flex;align-items:center;gap:10px;font:500 32px/1.5 var(--sans);color:var(--gold-deep)}
+.cell .k{display:inline-flex;align-items:center;gap:10px;font:500 calc(32px * var(--ts))/48px var(--text);color:var(--gold-deep)}
 .cell .k svg{width:30px;height:30px;fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.cell .v{font:800 48px/1.45 var(--sans);color:var(--emerald-deep)}
+.cell .v{font:800 calc(48px * var(--ts))/70px var(--text);color:var(--emerald-deep)}
 .sep{width:1.5px;background:linear-gradient(180deg,rgba(180,138,60,0),var(--gold),rgba(180,138,60,0));transform:scaleY(0)}
 .play .cell{animation:rise .85s var(--d) cubic-bezier(.2,.7,.2,1) both}
 .play .sep{animation:growY .7s 12.1s cubic-bezier(.3,.7,.2,1) both}
 @keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 
-.host{margin:24px 0 0;font:500 34px/1.6 var(--sans);color:var(--emerald-soft);opacity:0}
-.hostname{margin:-2px 0 0;font:700 60px/1.4 var(--serif);color:var(--emerald-deep);opacity:0}
-.kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:700 50px/1.4 var(--serif);color:var(--emerald-deep);opacity:0}
-.kin span{font:500 33px/1.4 var(--sans);color:var(--emerald-soft)}
+.host{margin:24px 0 0;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
+.hostname{margin:-2px 0 0;font:var(--db) calc(60px * var(--ds))/84px var(--display);color:var(--emerald-deep);opacity:0}
+.kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:var(--db) calc(50px * var(--ds))/70px var(--display);color:var(--emerald-deep);opacity:0}
+.kin span{font:500 calc(33px * var(--ts))/46px var(--text);color:var(--emerald-soft)}
 .kin i{display:block;align-self:center;width:10px;height:10px;border:1.5px solid var(--gold);transform:rotate(45deg)}
-.closing{margin:16px 0 0;display:flex;align-items:center;gap:14px;font:400 43px/1.6 var(--serif);color:var(--gold-deep);opacity:0}
+.closing{margin:16px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--gold-deep);opacity:0}
 .closing svg{width:36px;height:36px;flex:none;fill:#fff;stroke:var(--gold);stroke-width:1.3;stroke-linejoin:round;
   filter:drop-shadow(0 2px 3px rgba(138,101,34,.35))}
-.sign{margin:2px 0 0;display:flex;align-items:center;gap:22px;font:500 35px/1.6 var(--sans);color:var(--emerald);opacity:0}
+.sign{margin:2px 0 0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--emerald);opacity:0}
 .sign b{font-weight:800;color:var(--emerald-deep)}
 .sign::before,.sign::after{content:"";width:74px;height:1.5px}
 .sign::before{background:linear-gradient(to left,var(--gold),rgba(180,138,60,0))}
@@ -189,7 +193,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 #snd .off,#snd.muted .on{display:none}
 #snd.muted .off{display:inline}
 #hint{direction:rtl;white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid rgba(221,190,120,.7);
-  background:rgba(13,74,58,.86);color:var(--ivory);font:500 13px/1.2 var(--sans)}
+  background:rgba(13,74,58,.86);color:var(--ivory);font:500 13px/1.2 var(--text)}
 #ui button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
 #ui svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
@@ -335,6 +339,21 @@ const prng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ 
       s.style.setProperty('--i', i++); l.appendChild(s); if (k < words.length - 1) l.appendChild(document.createTextNode(' ')); });
   });
 })();
+
+/* ── الاسم: يُضبط حجمه ليملأ العرض المطلوب، ويُحسب موضع حبره ليبقى التباعد ثابتاً مع أي خط ── */
+function fitName() {
+  const el = document.querySelector('.name>span'), wrap = el.parentNode, cs = getComputedStyle(el), g = document.createElement('canvas').getContext('2d');
+  const target = parseFloat(getComputedStyle(stage).getPropertyValue('--name-w')) || 310, font = px => `${cs.fontWeight} ${px}px ${cs.fontFamily}`;
+  g.font = font(200); let m = g.measureText(el.textContent);
+  const S = Math.round(Math.min(200 * target / m.width, 200 * 190 / ((m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 1)));
+  g.font = font(S); m = g.measureText(el.textContent);
+  const L = Math.round(S * 1.8), base = (L - m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2 + m.fontBoundingBoxAscent;
+  const top = base - m.actualBoundingBoxAscent, bottom = base + m.actualBoundingBoxDescent;
+  el.style.fontSize = S + 'px'; el.style.lineHeight = L + 'px';
+  wrap.style.marginTop = Math.round(23 - top) + 'px'; wrap.style.marginBottom = Math.round(44 - (L - bottom)) + 'px';
+  wrap.style.clipPath = `inset(${Math.round(top - 18)}px 0 ${Math.round(L - bottom - 22)}px 0)`;
+  wrap.style.setProperty('--rise', Math.round(bottom - top + 60) + 'px');
+}
 
 /* ── جزيئات الضوء ── */
 const dcv = $('#dust'), dx = dcv.getContext('2d');
@@ -543,79 +562,54 @@ function drawMap(t) {
   needle.style.transform = `rotate(${rot}rad)`;
 }
 
-/* ── المؤثرات الصوتية: تُركَّب بالكود (مؤثرات حركة فقط، بدون موسيقى) وتُعزف متزامنة مع اللوحة ── */
+/* ── المؤثرات الصوتية: نغمات نظيفة قليلة تُركَّب بالكود (بدون ضجيج وبدون موسيقى) وتُعزف متزامنة مع اللوحة ── */
 const SR = 44100, A_LEN = (DURATION + HOLD) / 1000;
 function score(ac) {
   const out = ac.createDynamicsCompressor();
   out.threshold.value = -16; out.knee.value = 12; out.ratio.value = 3; out.attack.value = .003; out.release.value = .18;
   out.connect(ac.destination);
-  // صدى خفيف يعطي المؤثرات اتساعاً
+  // صدى خفيف يعطي النغمات اتساعاً
   const r = prng(31), ir = ac.createBuffer(2, Math.round(SR * 1.7), SR);
   for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < d.length; i++) d[i] = (r() * 2 - 1) * Math.pow(1 - i / d.length, 3.4); }
   const verb = ac.createConvolver(), wet = ac.createGain(); verb.buffer = ir; wet.gain.value = .5; verb.connect(wet); wet.connect(out);
-  const nb = ac.createBuffer(1, SR * 2, SR), nd = nb.getChannelData(0), rn = prng(5);
-  for (let i = 0; i < nd.length; i++) nd[i] = rn() * 2 - 1;
 
-  const AIR = 1.5, SPARK = 1.45, TAP = 1.3;   // مستويات المزج: الهواء، اللمعات، النقرات
-  const route = (node, pan, send, panTo, t0, t1) => { const p = ac.createStereoPanner(), s = ac.createGain();
-    p.pan.setValueAtTime(pan || 0, 0); if (panTo !== undefined) { p.pan.setValueAtTime(pan || 0, t0); p.pan.linearRampToValueAtTime(panTo, t1); }
-    s.gain.value = send; node.connect(p); p.connect(out); p.connect(s); s.connect(verb); };
-  const noise = (t, dur) => { const s = ac.createBufferSource(); s.buffer = nb; s.loop = true; s.start(t, (t * .37) % 1.5); s.stop(t + dur + .05); return s; };
-  // هفّة هواء: ضجيج مفلتر يتحرك تردده
-  const whoosh = (t, dur, f0, f1, g, o) => { o = o || {}; const s = noise(t, dur), f = ac.createBiquadFilter(), a = ac.createGain();
-    f.type = 'bandpass'; f.Q.value = o.q || .9; f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
-    a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(g * AIR, t + dur * (o.peak || .4)); a.gain.linearRampToValueAtTime(0, t + dur);
-    s.connect(f); f.connect(a); route(a, o.pan, o.send === undefined ? .22 : o.send, o.panTo, t, t + dur); };
-  const tone = (t, f0, f1, dur, g, o) => { o = o || {}; const s = ac.createOscillator(), a = ac.createGain(); s.type = o.type || 'sine';
-    s.frequency.setValueAtTime(f0, t); if (f1 !== f0) s.frequency.exponentialRampToValueAtTime(f1, t + (o.glide || dur));
-    a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(g, t + (o.att || .006)); a.gain.exponentialRampToValueAtTime(.0001, t + dur);
-    s.connect(a); s.start(t); s.stop(t + dur + .05); route(a, o.pan, o.send === undefined ? .2 : o.send); };
-  const glint = (t, f, g, pan) => { g *= SPARK; tone(t, f, f, .75, g, { pan, send: .7 }); tone(t, f * 2.76, f * 2.76, .32, g * .3, { pan, send: .7 }); };
-  const tick = (t, g, pan, fq) => { const s = noise(t, .035), f = ac.createBiquadFilter(), a = ac.createGain();
-    f.type = 'bandpass'; f.frequency.value = fq || 3800; f.Q.value = 1.6;
-    a.gain.setValueAtTime(g * TAP, t); a.gain.exponentialRampToValueAtTime(.0001, t + .035); s.connect(f); f.connect(a); route(a, pan, .15); };
+  // نغمة: تردد ينزلق من f0 إلى f1، تبدأ بهجمة att وتخفت خلال dur
+  const tone = (t, f0, f1, dur, g, o) => { o = o || {}; const s = ac.createOscillator(), a = ac.createGain(), p = ac.createStereoPanner(), w = ac.createGain();
+    s.type = o.type || 'sine'; s.frequency.setValueAtTime(f0, t); if (f1 !== f0) s.frequency.exponentialRampToValueAtTime(f1, t + (o.glide || dur));
+    a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(g, t + (o.att || .006));
+    if (o.hold) a.gain.setValueAtTime(g, t + o.att + o.hold);
+    a.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    p.pan.value = o.pan || 0; w.gain.value = o.send === undefined ? .2 : o.send;
+    s.connect(a); a.connect(p); p.connect(out); p.connect(w); w.connect(verb); s.start(t); s.stop(t + dur + .05); };
+  const glint = (t, f, g, pan) => { tone(t, f, f, .8, g, { pan, send: .7 }); tone(t, f * 2.76, f * 2.76, .3, g * .22, { pan, send: .7 }); };   // لمعة جرس صغيرة
+  const tap = (t, g, pan) => tone(t, 620, 430, .07, g, { type: 'triangle', pan, send: .25 });                                             // نقرة خشبية ناعمة
 
-  // 0–2: الإطار يُرسم، ولمعة عند كل نجمة
-  whoosh(.12, 1.9, 2200, 5200, .1, { q: .7, peak: .5 });
-  glint(.05, 2620, .07, 0); glint(.62, 2910, .06, -.7); glint(.64, 2960, .06, .7);
-  glint(1.22, 2740, .055, -.7); glint(1.24, 2780, .055, .7); glint(1.62, 3080, .07, 0);
-  // 2–4: الآية تنكشف من اليمين، ثم العنوان والاسم
-  whoosh(2, 1.45, 900, 2500, .17, { pan: .55, panTo: -.55 });
-  whoosh(2.75, .75, 1500, 3000, .13, { pan: .45, panTo: 0 });
-  whoosh(3.05, 1.15, 420, 1700, .2, { peak: .45 });
-  tone(3.05, 98, 147, 1.3, .12, { att: .55, glide: .9, send: .1 }); tone(3.05, 196, 294, 1.2, .06, { att: .55, glide: .9, send: .1 });
-  glint(3.98, 1760, .08, 0);
-  whoosh(3.95, 1.9, 5200, 8200, .07, { pan: .6, panTo: -.6, q: 1.2, send: .4 });
-  tick(4.05, .16, 0, 4600); glint(4.07, 3320, .035, 0);
-  // 4–7: نص الدعوة كلمةً كلمة، ثم صعود الرأس
-  whoosh(4.3, .85, 1200, 2400, .13);
-  for (let i = 0; i < 9; i++) tick(5.05 + i * .085, .15 + .05 * rn(), (rn() - .5) * .8, 3300 + rn() * 1100);
-  whoosh(6.4, 1.1, 700, 2300, .16, { peak: .5 });
-  // 7–12: البطاقة، والهبوط من فوق السحاب: ريح تشتد مع سرعة الكاميرا ثم تهدأ
-  tone(7.27, 190, 95, .26, .3, { send: .1 }); whoosh(7.25, .6, 800, 1700, .1);
+  // 0–2: لمعة عند كل نجمة من نجمات الإطار
+  glint(.05, 2093, .1, 0); glint(.62, 2217, .08, -.7); glint(.64, 2217, .08, .7);
+  glint(1.22, 2093, .075, -.7); glint(1.24, 2093, .075, .7); glint(1.62, 2349, .1, 0);
+  // 2–4: الآية ثم الاسم يصعد بدفء
+  glint(2.08, 1568, .06, .4);
+  tap(2.78, .1, .3);
+  tone(3.05, 98, 147, 1.3, .13, { att: .55, glide: .9, send: .1 }); tone(3.05, 196, 294, 1.2, .1, { att: .55, glide: .9, send: .15 });
+  glint(3.98, 1760, .12, 0); glint(4.07, 2637, .04, 0);
+  // 4–7: نص الدعوة
+  tap(4.33, .09, 0);
+  // 7–12: البطاقة ثم نغمة نزول هادئة ترافق الهبوط من السماء
+  tone(7.27, 190, 95, .26, .32, { send: .1 }); tone(7.27, 380, 250, .09, .12, { type: 'triangle', send: .1 });
   { const t = D0 / 1000, d = (D1 - D0) / 1000;
-    const s = noise(t - .1, d + .55), f = ac.createBiquadFilter(), a = ac.createGain(); f.type = 'bandpass'; f.Q.value = .6;
-    f.frequency.setValueAtTime(260, t - .1); f.frequency.exponentialRampToValueAtTime(2300, t + d * .55); f.frequency.exponentialRampToValueAtTime(360, t + d + .35);
-    a.gain.setValueAtTime(0, t - .1); a.gain.linearRampToValueAtTime(.08, t + d * .22); a.gain.linearRampToValueAtTime(.5, t + d * .55);
-    a.gain.linearRampToValueAtTime(.12, t + d * .86); a.gain.linearRampToValueAtTime(0, t + d + .4);
-    s.connect(f); f.connect(a); route(a, 0, .28);
-    const s2 = noise(t, d + .3), f2 = ac.createBiquadFilter(), a2 = ac.createGain(); f2.type = 'lowpass'; f2.frequency.value = 170;
-    a2.gain.setValueAtTime(0, t); a2.gain.linearRampToValueAtTime(.9, t + d * .55); a2.gain.linearRampToValueAtTime(0, t + d + .3);
-    s2.connect(f2); f2.connect(a2); route(a2, 0, 0);
-    [[.34, -.75], [.41, .7], [.48, -.6], [.54, .8]].forEach(([u, pan]) => whoosh(t + d * u - .12, .42, 1900, 4600, .14, { pan: pan * .4, panTo: pan, q: 1.1 })); }
-  // الدبوس: صفير سقوط قصير، ارتطام، ارتدادة، ثم ثلاث نبضات رادار واسم الموقع
-  whoosh(10.16, .44, 3200, 900, .16, { peak: .7, q: 1.4 });
-  tone(10.595, 170, 52, .36, .6, { send: .12 }); tone(10.595, 340, 170, .1, .34, { type: 'triangle', send: .12 }); tick(10.595, .34, 0, 2200);
-  tone(10.917, 150, 70, .16, .3, { send: .1 }); tick(10.917, .12, 0, 2200);
-  [[10.62, .27], [11.47, .19], [12.33, .13]].forEach(([t, g]) => { tone(t, 1000, 968, 1, g, { send: .8, att: .008 }); tone(t, 2000, 1936, .5, g * .16, { send: .8 }); });
-  tone(10.95, 480, 760, .11, .26, { glide: .08, send: .3 }); tick(10.95, .12, 0, 3000);
+    tone(t, 392, 131, d + .5, .12, { att: d * .5, glide: d + .1, send: .5 });
+    tone(t, 784, 262, d + .3, .035, { att: d * .5, glide: d + .1, send: .5 }); }
+  // الدبوس: ارتطام وارتدادة، ثم ثلاث نبضات رادار واسم الموقع
+  tone(10.595, 170, 52, .36, .6, { send: .12 }); tone(10.595, 340, 170, .1, .34, { type: 'triangle', send: .12 }); tone(10.595, 900, 520, .035, .14, { send: .1 });
+  tone(10.917, 150, 70, .16, .2, { send: .1 }); tone(10.917, 300, 160, .06, .1, { type: 'triangle', send: .1 });
+  [[10.62, .26], [11.47, .18], [12.33, .12]].forEach(([t, g]) => { tone(t, 880, 852, 1, g, { send: .8, att: .008 }); tone(t, 1760, 1704, .5, g * .14, { send: .8 }); });
+  tone(10.95, 480, 760, .11, .24, { glide: .08, send: .3 });
   // 12–15: الموعد والاستقبال والختام، ونبضتا قلب
-  [[12, .45], [12.22, -.45], [12.65, 0], [12.9, 0], [13.25, 0], [13.75, 0], [14.15, 0]].forEach(([t, pan], i) => {
-    whoosh(t, .6, 1100 + i * 90, 2300 + i * 120, i === 3 ? .15 : .11, { pan }); tick(t + .02, .07, pan, 4200); });
+  tap(12.02, .1, .45); tap(12.24, .1, -.45); tap(12.92, .09, 0); tap(13.27, .07, 0); tap(14.17, .07, 0);
   [14.82, 16.52].forEach((t, i) => { const g = i ? .16 : .24;
     tone(t, 120, 72, .16, g, { send: .1 }); tone(t, 240, 150, .09, g * .4, { send: .1 });
     tone(t + .21, 105, 66, .15, g * .7, { send: .1 }); tone(t + .21, 210, 135, .08, g * .28, { send: .1 }); });
-  glint(15, 2350, .05, 0);
+  glint(15, 2093, .07, 0);
 }
 const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
 const audio = !OAC ? Promise.resolve(null) : new Promise((res, rej) => {
@@ -721,8 +715,8 @@ window.addEventListener('resize', fit);
 const ready = Promise.race([
   (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(),
   new Promise(r => setTimeout(r, 3500)),
-]).then(() => { fit(); });
-window.invite = { ready, seek, replay, audio, DURATION, HOLD };
+]).then(() => { fitName(); fit(); });
+window.invite = { ready, seek, replay, audio, refit: () => { fitName(); fit(); }, DURATION, HOLD };
 
 fit();
 if (!CAPTURE) ready.then(() => {

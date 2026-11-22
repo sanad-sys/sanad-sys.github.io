@@ -112,7 +112,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 /* ── بطاقة الخريطة ── */
 .where{position:absolute;left:0;right:0;top:784px;margin:0;text-align:center;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
 .play .where{animation:rise .9s 7.15s cubic-bezier(.2,.7,.2,1) both}
-.map{position:absolute;left:120px;top:848px;width:840px;height:384px;display:block;opacity:0;color:inherit;text-decoration:none}
+.map{position:absolute;left:120px;top:848px;width:840px;height:352px;display:block;opacity:0;color:inherit;text-decoration:none}
 .play .map{animation:cardIn 1.05s 7.25s cubic-bezier(.2,.7,.2,1) both}
 @keyframes cardIn{from{opacity:0;transform:translateY(48px) scale(.94)}to{opacity:1;transform:none}}
 .mapclip{position:absolute;inset:0;border-radius:38px;overflow:hidden;background:#EFE2C4;
@@ -122,13 +122,13 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
   background:rgba(255,253,246,.78);box-shadow:0 0 0 1.5px rgba(180,138,60,.75)}
 .compass svg{position:absolute;inset:0;width:100%;height:100%}
 
-.ring{position:absolute;left:386px;top:162px;width:68px;height:68px;border-radius:50%;opacity:0;
+.ring{position:absolute;left:386px;top:144px;width:68px;height:68px;border-radius:50%;opacity:0;
   border:4px solid #DFB04A;box-shadow:0 0 18px rgba(223,176,74,.8),0 0 0 1px rgba(138,101,34,.28),inset 0 0 0 1.5px rgba(255,255,255,.7);
   background:radial-gradient(closest-side, rgba(223,176,74,0) 55%, rgba(223,176,74,.34))}
 .play .ring{animation:pulse 2.6s var(--d) cubic-bezier(.15,.6,.3,1) infinite both}
 @keyframes pulse{0%{opacity:0;transform:scale(.2)}9%{opacity:1}100%{opacity:0;transform:scale(4.5)}}
 
-.pin{position:absolute;left:420px;top:196px;width:0;height:0;pointer-events:none}
+.pin{position:absolute;left:420px;top:178px;width:0;height:0;pointer-events:none}
 .pin .shadow{position:absolute;left:-24px;top:-8px;width:48px;height:16px;border-radius:50%;
   background:rgba(58,40,6,.42);filter:blur(3px);opacity:0}
 .play .pin .shadow{animation:shadow .95s 10.1s both}
@@ -144,7 +144,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
   86%{opacity:1;transform:translateY(0) scale(1.05,.95);animation-timing-function:ease-out}
   100%{opacity:1;transform:none}}
 
-.placewrap{position:absolute;left:0;right:0;top:272px;display:flex;justify-content:center;pointer-events:none}
+.placewrap{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;pointer-events:none}
 .place{display:inline-flex;align-items:center;padding:8px 38px 10px;border-radius:999px;white-space:nowrap;opacity:0;
   background:rgba(255,253,246,.95);box-shadow:0 0 0 1.5px rgba(180,138,60,.9),0 16px 26px -12px rgba(90,62,10,.55);
   font:800 calc(45px * var(--ts))/68px var(--text);color:var(--emerald-deep)}
@@ -153,7 +153,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 @keyframes labelIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
 
 /* ── الموعد والاستقبال والختام ── */
-.foot{position:absolute;left:0;right:0;top:1286px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.foot{position:absolute;left:0;right:0;top:1254px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .when{display:flex;align-items:stretch;justify-content:center}
 .cell{width:370px;display:flex;flex-direction:column;align-items:center;opacity:0}
 .cell .k{display:inline-flex;align-items:center;gap:10px;font:500 calc(32px * var(--ts))/48px var(--text);color:var(--gold-deep)}
@@ -166,21 +166,25 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 
 .host{margin:24px 0 0;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
 .hostname{margin:-2px 0 0;font:var(--db) calc(60px * var(--ds))/84px var(--display);color:var(--emerald-deep);opacity:0}
+.tel{margin:-4px 0 2px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;font:500 calc(34px * var(--ts))/46px var(--text);color:var(--emerald-soft);opacity:0;font-variant-numeric:tabular-nums}
+.tel[hidden]{display:none}
+.tel svg{width:28px;height:28px;fill:none;stroke:var(--gold);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:var(--db) calc(50px * var(--ds))/70px var(--display);color:var(--emerald-deep);opacity:0}
 .kin span{font:500 calc(33px * var(--ts))/46px var(--text);color:var(--emerald-soft)}
 .kin i{display:block;align-self:center;width:10px;height:10px;border:1.5px solid var(--gold);transform:rotate(45deg)}
-.closing{margin:16px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--gold-deep);opacity:0}
+.closing{margin:12px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--gold-deep);opacity:0}
 .closing svg{width:36px;height:36px;flex:none;fill:#fff;stroke:var(--gold);stroke-width:1.3;stroke-linejoin:round;
   filter:drop-shadow(0 2px 3px rgba(138,101,34,.35))}
-.sign{margin:2px 0 0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--emerald);opacity:0}
+.sign{margin:0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--emerald);opacity:0}
 .sign b{font-weight:800;color:var(--emerald-deep)}
 .sign::before,.sign::after{content:"";width:74px;height:1.5px}
 .sign::before{background:linear-gradient(to left,var(--gold),rgba(180,138,60,0))}
 .sign::after{background:linear-gradient(to right,var(--gold),rgba(180,138,60,0))}
 .play .host{animation:rise .9s 12.65s cubic-bezier(.2,.7,.2,1) both}
 .play .hostname{animation:rise .95s 12.9s cubic-bezier(.2,.7,.2,1) both}
-.play .kin{animation:rise .9s 13.25s cubic-bezier(.2,.7,.2,1) both}
-.play .closing{animation:rise .9s 13.75s cubic-bezier(.2,.7,.2,1) both}
+.play .tel{animation:rise .9s 13.1s cubic-bezier(.2,.7,.2,1) both}
+.play .kin{animation:rise .9s 13.35s cubic-bezier(.2,.7,.2,1) both}
+.play .closing{animation:rise .9s 13.8s cubic-bezier(.2,.7,.2,1) both}
 .play .closing svg{animation:beat 1.7s 14.6s ease-in-out infinite both}
 .play .sign{animation:rise .8s 14.15s cubic-bezier(.2,.7,.2,1) both}
 @keyframes beat{0%,36%,100%{transform:scale(1)}14%{transform:scale(1.2)}26%{transform:scale(.96)}}
@@ -270,6 +274,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
       </div>
       <p class="host">في استقبالكم نيابةً عني والدي الغالي</p>
       <p class="hostname">أحمد نعمان سعيد</p>
+      <p class="tel" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.7l1.4 4-2 1.5a12 12 0 0 0 6.3 6.3l1.5-2 4 1.4v2.7a2 2 0 0 1-2.2 2C10.9 18.8 5.2 13.1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><bdi dir="ltr"></bdi></p>
       <p class="kin"><span>وأبناء عمي</span>محمد أمين<i aria-hidden="true"></i>نبيل أمين</p>
       <p class="closing"><span>حضوركم تشريف، وفرحتنا تكتمل بوجودكم</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
       <p class="sign"><span>الداعي: <b>أبو سند</b></span></p>
@@ -335,6 +340,10 @@ const prng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ 
   star(M, B, 15, 1.6);
 })();
 
+/* ── رقم التواصل اختياري ولا يُكتب في الملف: يُمرَّر في الرابط (?tel=) ── */
+(() => { const el = document.querySelector('.tel'), v = (new URLSearchParams(location.search).get('tel') || el.querySelector('bdi').textContent).trim();
+  if (v) { el.querySelector('bdi').textContent = v; el.hidden = false; } })();
+
 /* ── نص الدعوة: كل كلمة تظهر بعد أختها ── */
 (() => { let i = 0;
   document.querySelectorAll('.body .l').forEach(l => {
@@ -383,7 +392,7 @@ function drawDust(tt) {
 }
 
 /* ── الخريطة: أرض مدرّجات جبلية تُرسم بالكود، والكاميرا تهبط نحو البيت ── */
-const MW = 840, MH = 384, OX = 420, OY = 196;      // نقطة الدبوس داخل البطاقة
+const MW = 840, MH = 352, OX = 420, OY = 178;      // نقطة الدبوس داخل البطاقة
 const Z0 = .14, D0 = 7600, D1 = 10350, ROT0 = -.55; // بداية ونهاية الهبوط
 const mcv = $('#mapcv'), mx = mcv.getContext('2d'), needle = $('#needle');
 let mk = 1;

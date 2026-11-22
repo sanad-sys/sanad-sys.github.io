@@ -63,7 +63,7 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 @keyframes pop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
 
 /* ── الرأس ── */
-.head{position:absolute;left:0;right:0;top:166px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.head{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .play .head{animation:lift 1.1s 6.4s cubic-bezier(.65,0,.25,1) both}
 @keyframes lift{from{transform:translateY(310px)}to{transform:none}}
 
@@ -110,6 +110,8 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
 @keyframes rise{from{opacity:0;transform:translateY(24px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
 
 /* ── بطاقة الخريطة ── */
+.where{position:absolute;left:0;right:0;top:784px;margin:0;text-align:center;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--emerald-soft);opacity:0}
+.play .where{animation:rise .9s 7.15s cubic-bezier(.2,.7,.2,1) both}
 .map{position:absolute;left:120px;top:848px;width:840px;height:384px;display:block;opacity:0;color:inherit;text-decoration:none}
 .play .map{animation:cardIn 1.05s 7.25s cubic-bezier(.2,.7,.2,1) both}
 @keyframes cardIn{from{opacity:0;transform:translateY(48px) scale(.94)}to{opacity:1;transform:none}}
@@ -221,6 +223,8 @@ body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--em
         <span class="l">وتناول طعام العقيقة.</span>
       </p>
     </header>
+
+    <p class="where">وذلك في منزلنا الكائن في</p>
 
     <a class="map" href="https://maps.app.goo.gl/gVxQCN5kG6onzj8j8" target="_blank" rel="noopener" aria-label="الموقع: الربادي، المنازلة — افتحه في خرائط Google">
       <div class="mapclip">

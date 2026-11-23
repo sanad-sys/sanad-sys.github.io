@@ -77,6 +77,12 @@ html.dk #splash .wm,html.dk #splash .ft b{color:#9FE1CB}
 html.dk #splash .sy,html.dk #splash .pc,html.dk #off p{color:#9AABA4}
 html.dk #splash .pb{background:#24332E}
 html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n{color:#9AABA4}
+/* سند 9.78: الفتح بالبصمة / الوجه — لو اللمسة ما وصلت هالصفحة، نطلب ضغطة هنا (نفس شكل لوحة الإشعارات) */
+#bio{position:fixed;inset:0;z-index:51;display:none;flex-direction:column;justify-content:flex-end;background:rgba(10,25,20,.45)}#bio.show{display:flex}
+#bio .pn{background:#fff;border-radius:22px 22px 0 0;padding:22px 20px calc(18px + env(safe-area-inset-bottom));text-align:center;font-family:'Readex Pro',system-ui,sans-serif;color:#12201C;animation:pu .25s ease-out}
+#bio .bl{font-size:42px;line-height:1}#bio h3{margin:10px 0 6px;font-size:18px}#bio p{margin:0 0 18px;color:#5C6B66;font-size:14px;line-height:1.7}
+#bio button{display:block;width:100%;height:52px;border-radius:16px;border:none;font:inherit;font-size:16px;font-weight:600}#bio .y{background:#0B5D4B;color:#fff}#bio .n{background:none;color:#5C6B66;margin-top:6px;font-weight:400}
+html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n{color:#9AABA4}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
@@ -102,6 +108,7 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
 <div id="off" role="alert"><img src="icon-192.png" alt=""><b>ما فيه اتصال</b><p>تأكد من النت وارجع جرّب.<br>اللي سجلته قبل محفوظ في جوالك.</p><button type="button" onclick="location.reload()">جرّب مرة ثانية</button></div>
 <div class="bar" id="ins" role="dialog" aria-label="تثبيت سند"><img src="icon-192.png" alt=""><span id="insT">ثبّت سند على جوالك عشان يفتح مثل التطبيق</span><button class="go" id="insGo" type="button">تثبيت</button><button class="x" id="insX" type="button" aria-label="إغلاق">✕</button></div>
 
+<div id="bio" role="dialog" aria-modal="true"><div class="pn"><div class="bl">👆</div><h3 id="bioT"></h3><p id="bioP"></p><button class="y" id="bioY"></button><button class="n" id="bioN"></button></div></div>
 <div id="psh" role="dialog" aria-modal="true"><div class="pn"><div class="bl">🔔</div><h3 id="pshT"></h3><p id="pshP"></p><button class="y" id="pshY"></button><button class="n" id="pshN"></button></div></div>
 <script>
 (function () {
@@ -310,6 +317,110 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
     setTimeout(function () { bar.classList.add('show'); }, 3000);
   }
 
+
+  /* ═══ سند 9.78: الفتح بالبصمة / الوجه (WebAuthn) ═══
+     WebAuthn يشتغل بس في الصفحة العليا (هالصفحة) — سند داخل إطار قوقل يطلب منها بالرسائل، ونقبل بس من داخل إطار التطبيق (fromApp).
+     bio? ← هل الجوال يدعمها ومفعّلة لهالمستخدم · bio-reg ← تسجيل (بعد ما يكتب رمزه في سند) · bio-get ← تحقق · bio-off ← إيقاف.
+     المستخدم بمعرّف من سند (uid = بصمة من الرمز، مو الرمز) · نحفظ هنا معرّف المفتاح ومفتاحه العام بس (sanad_bio) — والتحقق:
+     التحدّي نفسه · العنوان · الجوال تحقق من صاحبه (UV) · التوقيع بالمفتاح العام. الرمز يبقى البديل دايم في سند */
+  var BT = {
+    ar: { t: 'افتح سند ببصمتك أو وجهك', p: 'اضغط «متابعة» وجوالك يطلب بصمتك أو وجهك.', tr: 'تفعيل الفتح بالبصمة / الوجه', pr: 'اضغط «متابعة» وأكّد ببصمتك أو وجهك.', y: 'متابعة', n: 'إلغاء', no: 'ما تم التحقق — اكتب رمزك', un: 'جوالك ما يدعم البصمة هنا — استخدم الرمز', gone: 'البصمة مو مفعّلة على هالجوال — فعّلها من «حسابي»' },
+    en: { t: 'Open Sanad with your fingerprint or face', p: 'Tap «Continue» and your phone will ask for your fingerprint or face.', tr: 'Turn on fingerprint / face unlock', pr: 'Tap «Continue» and confirm with your fingerprint or face.', y: 'Continue', n: 'Cancel', no: 'Not verified — type your code', un: 'This phone does not support it here — use your code', gone: 'Not set up on this phone — turn it on from «My account»' },
+    bn: { t: 'আঙুলের ছাপ বা মুখ দিয়ে সানাদ খুলুন', p: '«চালিয়ে যান» চাপুন, ফোন আপনার আঙুলের ছাপ বা মুখ চাইবে।', tr: 'আঙুলের ছাপ / মুখ দিয়ে খোলা চালু করুন', pr: '«চালিয়ে যান» চাপুন এবং আঙুলের ছাপ বা মুখ দিয়ে নিশ্চিত করুন।', y: 'চালিয়ে যান', n: 'বাতিল', no: 'যাচাই হয়নি — কোড লিখুন', un: 'এই ফোনে এটা চলে না — কোড ব্যবহার করুন', gone: 'এই ফোনে চালু নেই — «আমার অ্যাকাউন্ট» থেকে চালু করুন' }
+  };
+  var BIO_K = 'sanad_bio', RP = location.hostname, bioBusy = false;
+  var bioOk = !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create && window.crypto && crypto.subtle);
+  function bioStore() { try { return JSON.parse(localStorage.getItem(BIO_K) || '{}') || {}; } catch (x) { return {}; } }
+  function bioSave(o) { try { localStorage.setItem(BIO_K, JSON.stringify(o)); } catch (x) {} }
+  function b64u(buf) { var b = new Uint8Array(buf), t = ''; for (var i = 0; i < b.length; i++) t += String.fromCharCode(b[i]); return btoa(t).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+  function unb64u(t) { t = String(t).replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; var b = atob(t), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+  function rnd(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  function bioAvail() {
+    if (!bioOk || !PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return Promise.resolve(false);
+    return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function () { return false; });
+  }
+  /* توقيع ECDSA يجي DER ← WebCrypto يبيه r||s (٣٢ + ٣٢) */
+  function der2raw(d) {
+    var i = 2, out = new Uint8Array(64);
+    if (d[1] & 0x80) i += d[1] & 0x7f;
+    for (var k = 0; k < 2; k++) {
+      if (d[i] !== 0x02) throw new Error('sig');
+      var len = d[i + 1], v = d.slice(i + 2, i + 2 + len); i += 2 + len;
+      while (v.length > 32 && v[0] === 0) v = v.slice(1);
+      if (v.length > 32) throw new Error('sig');
+      out.set(v, k * 32 + (32 - v.length));
+    }
+    return out;
+  }
+  function bioVerify(rec, cred, chal) {
+    try {
+      var r = cred.response, cd = JSON.parse(new TextDecoder().decode(r.clientDataJSON)), ad = new Uint8Array(r.authenticatorData);
+      if (cd.type !== 'webauthn.get' || cd.challenge !== b64u(chal) || cd.origin !== location.origin) return Promise.resolve(false);
+      if (!(ad[32] & 1) || !(ad[32] & 4)) return Promise.resolve(false);   // حاضر (UP) + تحقق من صاحبه (UV)
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(RP)).then(function (h) {
+        var hh = new Uint8Array(h); for (var i = 0; i < 32; i++) if (hh[i] !== ad[i]) return false;
+        if (!rec.pk) return true;   // متصفح ما يعطي المفتاح العام وقت التسجيل ← نكتفي بتحقق الجوال (UV) ونفس التحدّي والعنوان
+        return crypto.subtle.digest('SHA-256', r.clientDataJSON).then(function (ch) {
+          var data = new Uint8Array(ad.length + 32); data.set(ad, 0); data.set(new Uint8Array(ch), ad.length);
+          var rsa = rec.alg === -257, imp = rsa ? { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' } : { name: 'ECDSA', namedCurve: 'P-256' };
+          return crypto.subtle.importKey('spki', unb64u(rec.pk), imp, false, ['verify']).then(function (key) {
+            return crypto.subtle.verify(rsa ? imp : { name: 'ECDSA', hash: 'SHA-256' }, key, rsa ? new Uint8Array(r.signature) : der2raw(new Uint8Array(r.signature)), data);
+          });
+        });
+      }).catch(function () { return false; });
+    } catch (x) { return Promise.resolve(false); }
+  }
+  function bioReg(d) {
+    return navigator.credentials.create({ publicKey: {
+      rp: { id: RP, name: 'سند' },
+      user: { id: rnd(16), name: 'sanad-' + d.uid.slice(0, 8), displayName: String(d.name || 'سند').slice(0, 40) },
+      challenge: rnd(32), pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+      authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', residentKey: 'discouraged', requireResidentKey: false },
+      timeout: 60000, attestation: 'none' } }).then(function (c) {
+      if (!c || !c.rawId) return { ok: false };
+      var r = c.response, pk = null, alg = -7;
+      try { pk = r.getPublicKey ? r.getPublicKey() : null; alg = r.getPublicKeyAlgorithm ? r.getPublicKeyAlgorithm() : -7; } catch (x) {}
+      var all = bioStore(); all[d.uid] = { id: b64u(c.rawId), pk: pk ? b64u(pk) : '', alg: alg, at: Date.now() }; bioSave(all);
+      return { ok: true };
+    });
+  }
+  function bioGet(d, T) {
+    var rec = bioStore()[d.uid];
+    if (!rec || !rec.id) return Promise.resolve({ ok: false, gone: true, msg: T.gone });
+    var chal = rnd(32);
+    return navigator.credentials.get({ publicKey: { challenge: chal, rpId: RP, userVerification: 'required', timeout: 60000,
+      allowCredentials: [{ type: 'public-key', id: unb64u(rec.id), transports: ['internal', 'hybrid'] }] } }).then(function (c) {
+      if (!c) return { ok: false, msg: T.no };
+      return bioVerify(rec, c, chal).then(function (v) { return v ? { ok: true } : { ok: false, msg: T.no }; });
+    });
+  }
+  var bioBox = document.getElementById('bio');
+  function bioHide() { bioBox.classList.remove('show'); }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || typeof d.sanad !== 'string' || !/^bio(\?|-reg|-get|-off)$/.test(d.sanad) || !e.source || !fromApp(e)) return;
+    if (!/^[0-9a-f]{24}$/.test(String(d.uid || ''))) return;
+    var src = e.source, reply = function (o) { try { src.postMessage(o, '*'); } catch (x) {} };
+    if (d.sanad === 'bio?') { bioAvail().then(function (a) { reply({ sanad: 'bio-info', ok: a, on: !!(a && bioStore()[d.uid]) }); }); return; }
+    if (d.sanad === 'bio-off') { var all = bioStore(); delete all[d.uid]; bioSave(all); reply({ sanad: 'bio-off-r', ok: true }); return; }
+    var reg = d.sanad === 'bio-reg', rk = reg ? 'bio-reg-r' : 'bio-get-r', T = BT[d.lang] || BT.ar;
+    var done = function (o) { o.sanad = rk; bioBusy = false; bioHide(); reply(o); };
+    if (bioBusy) return;
+    bioAvail().then(function (a) {
+      if (!a) { done({ ok: false, msg: T.un }); return; }
+      var run = function () {
+        bioBusy = true;
+        (reg ? bioReg(d) : bioGet(d, T)).then(function (o) { done(o || { ok: false, msg: T.no }); }, function (err) { done({ ok: false, msg: err && err.name === 'NotAllowedError' ? T.no : T.no }); });
+      };
+      if (navigator.userActivation && navigator.userActivation.isActive) { run(); return; }   // لمسته داخل سند وصلت هنا
+      document.getElementById('bioT').textContent = reg ? T.tr : T.t; document.getElementById('bioP').textContent = reg ? T.pr : T.p;
+      var y = document.getElementById('bioY'), n = document.getElementById('bioN');
+      y.textContent = T.y; n.textContent = T.n;
+      bioBox.setAttribute('dir', d.lang === 'en' || d.lang === 'bn' ? 'ltr' : 'rtl');
+      y.onclick = function () { bioHide(); run(); };
+      n.onclick = function () { done({ ok: false, msg: T.no, cancel: true }); };
+      bioBox.classList.add('show');
+    });
+  });
 
   /* ═══ إشعارات الجوال (v7.3): النظام داخل إطار قوقل يطلب التفعيل من هنا — الإذن والاشتراك لازم يكونون بالصفحة الأم ═══ */
   var FB = 'https://www.gstatic.com/firebasejs/10.12.2/';

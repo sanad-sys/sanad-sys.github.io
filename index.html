@@ -373,7 +373,7 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
   function bioReg(d) {
     return navigator.credentials.create({ publicKey: {
       rp: { id: RP, name: 'سند' },
-      user: { id: rnd(16), name: 'sanad-' + d.uid.slice(0, 8), displayName: String(d.name || 'سند').slice(0, 40) },
+      user: { id: rnd(16), name: String(d.name || 'سند').slice(0, 40), displayName: String(d.name || 'سند').slice(0, 40) },   // بدون أي معرّف
       challenge: rnd(32), pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
       authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', residentKey: 'discouraged', requireResidentKey: false },
       timeout: 60000, attestation: 'none' } }).then(function (c) {

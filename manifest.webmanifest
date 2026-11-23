@@ -8,6 +8,7 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "launch_handler": { "client_mode": ["focus-existing", "auto"] },
   "orientation": "portrait",
   "background_color": "#FAF8F3",
   "theme_color": "#FAF8F3",

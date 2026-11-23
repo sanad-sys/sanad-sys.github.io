@@ -50,6 +50,7 @@ html,body{margin:0;height:100%;background:var(--sbg,#FAF8F3);overflow:hidden;fon
 @keyframes ld{0%{width:0}70%{width:78%;background:#C9A24D}100%{width:92%;background:#0B5D4B}}
 #splash.done .pb i{width:100%!important;background:#0B5D4B;transition:width .3s}
 @media (prefers-reduced-motion:reduce){#splash *{animation-duration:.01s!important;animation-delay:0s!important}}
+#splash.qk *{animation-duration:.01s!important;animation-delay:0s!important}#splash.qk .pb i{animation-duration:1.2s!important}   /* الرجوع السريع: الشعار ثابت على طول */
 .bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:10;max-width:480px;margin:0 auto;background:#12201C;color:#FAF8F3;border-radius:18px;padding:14px 16px;display:none;align-items:center;gap:12px;font-size:14px;line-height:1.6;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .bar.show{display:flex}
 .bar img{width:40px;height:40px;border-radius:11px;flex:none}
@@ -109,11 +110,18 @@ html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n
   var APP_URL = 'https://script.google.com/macros/s/AKfycbyGpZXFoPyezeBBB3hAcnxDYJXw6gN1USfKZAgEZgj8N-Kp3M_P5oTQh16S9JcOKpLJ/exec';
 
   var splash = document.getElementById('splash'), hidden = false, t0 = Date.now(), slowT = 0;
+  /* رجوع سريع: سند كان ظاهر قبل أقل من ١٠ دقايق (طلعت بزر الرئيسية ورجعت) ← الشعار ثابت بدون الحركة، ويختفي أول ما يجهز سند */
+  var QUICK = (function () { try { var t = Number(localStorage.getItem('sanad_cover_seen') || 0); return t > 0 && Date.now() - t < 600000; } catch (x) { return false; } })();
+  if (QUICK) splash.classList.add('qk');
+  function seen() { try { localStorage.setItem('sanad_cover_seen', String(Date.now())); } catch (x) {} }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') seen(); });
+  window.addEventListener('pagehide', seen);
+  setInterval(function () { if (document.visibilityState === 'visible') seen(); }, 60000);
   function hideSplash() {
     if (hidden) return; hidden = true; clearTimeout(slowT);
     splash.classList.add('done');
     /* ما نقطع الحركة بنصها: أقل شي ١٫٦ ثانية، وأقصى شي لما يجهز النظام */
-    var wait = Math.max(0, 1600 - (Date.now() - t0));
+    var wait = QUICK ? 0 : Math.max(0, 1600 - (Date.now() - t0));   // الرجوع السريع: بدون انتظار الحركة
     setTimeout(function () { if (!hidden) return; splash.classList.add('hide'); setTimeout(function () { if (hidden) splash.style.display = 'none'; }, 450); }, wait);
   }
   /* النظام يقول "جاهز" أول ما تظهر شاشة الرمز أو الرئيسية ← نشيل الغطاء على طول */

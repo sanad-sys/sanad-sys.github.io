@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>دعوة عقيقة حمد</title>
+<script>/* ?v=um (أو #um): دعوة أم المولود بنصّها وألوانها */
+if (/[?&]v=um\b|#um\b/.test(location.search + location.hash)) document.documentElement.setAttribute('data-v', 'um');</script>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F7EFDD">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&family=El+Messiri:wght@500;700&family=Tajawal:wght@500;800&display=swap">
+<style>
+/* لوحة ثابتة 1080×1920 (ستوري 9:16) تُصغَّر لتناسب أي شاشة:
+   رأس (الآية + الاسم + نص الدعوة) ← بطاقة الخريطة والهبوط ← الموعد والاستقبال والختام */
+:root{
+  /* لوحة دعوة الأب: عاجي + أخضر زمردي + ذهبي */
+  --ivory:#FDFAF2; --cream:#F7EFDD; --beige:#EDDFC1;
+  --accent:#B48A3C; --accent-hi:#DDBE78; --accent-deep:#8A6522; --accent-0:rgba(180,138,60,0);
+  --ink:#0D4A3A; --ink-deep:#07352A; --ink-soft:#3F7062;
+  --bg-a:#FFFEF9; --bg-a0:rgba(255,254,249,0); --bg-b:rgba(214,180,106,.34); --bg-b0:rgba(214,180,106,0);
+  --bg-1:#FCF8EE; --bg-2:#F6ECD7; --bg-3:#EDDDBD;
+  --glow-a:rgba(240,208,134,.40); --glow-a0:rgba(240,208,134,0); --glow-b:rgba(255,250,232,.75); --glow-b0:rgba(255,250,232,0);
+  --sheen:#CDA756;
+  --card:#EFE2C4; --card-ring:rgba(255,253,246,.9); --card-line:rgba(180,138,60,.5); --card-shadow:rgba(105,76,18,.55);
+  --chip:rgba(255,253,246,.78); --chip-line:rgba(180,138,60,.75);
+  --pulse:#DFB04A; --pulse-glow:rgba(223,176,74,.8); --pulse-edge:rgba(138,101,34,.28); --pulse-0:rgba(223,176,74,0); --pulse-fill:rgba(223,176,74,.34);
+  --pin-a:#17705A; --pin-b:#07352A; --pin-shadow:rgba(58,40,6,.42); --pin-drop:rgba(40,28,4,.28);
+  --label:rgba(255,253,246,.95); --label-line:rgba(180,138,60,.9); --label-shadow:rgba(90,62,10,.55);
+  --heart-shadow:rgba(138,101,34,.35);
+  --ui:rgba(13,74,58,.86); --ui-line:rgba(221,190,120,.7);
+  --quran:'Amiri','Scheherazade New','Traditional Arabic','Times New Roman',serif;   /* الآية */
+  --display:'El Messiri','Tajawal','Segoe UI',Tahoma,sans-serif;                     /* الاسم والعناوين */
+  --text:'Tajawal','Segoe UI',Tahoma,'Noto Sans Arabic',sans-serif;                  /* التفاصيل */
+  --dr:500; --db:700;     /* وزن العناوين: عادي / عريض */
+  --ds:.88; --ts:1;       /* تكبير/تصغير خط العناوين والتفاصيل */
+  --name-w:380px;         /* عرض الاسم؛ حجمه وموضعه يُضبطان تلقائياً حسب الخط */
+  color-scheme:light;
+}
+/* لوحة دعوة الأم (?v=um): وردي هادئ + عنّابي + ذهبي وردي */
+:root[data-v="um"]{
+  --ivory:#FFFAF8; --cream:#FBEEEC; --beige:#F1D7D5;
+  --accent:#B8806E; --accent-hi:#E3B3A4; --accent-deep:#96574C; --accent-0:rgba(184,128,110,0);
+  --ink:#6A2145; --ink-deep:#4E1433; --ink-soft:#8C5470;
+  --bg-a:#FFFDFC; --bg-a0:rgba(255,253,252,0); --bg-b:rgba(226,160,150,.30); --bg-b0:rgba(226,160,150,0);
+  --bg-1:#FFF8F6; --bg-2:#FAEAE8; --bg-3:#F1D5D3;
+  --glow-a:rgba(240,180,170,.38); --glow-a0:rgba(240,180,170,0); --glow-b:rgba(255,246,244,.75); --glow-b0:rgba(255,246,244,0);
+  --sheen:#DDA493;
+  --card:#F3DAD6; --card-ring:rgba(255,250,248,.9); --card-line:rgba(184,128,110,.5); --card-shadow:rgba(110,50,60,.5);
+  --chip:rgba(255,250,248,.8); --chip-line:rgba(184,128,110,.75);
+  --pulse:#D9937F; --pulse-glow:rgba(217,147,127,.8); --pulse-edge:rgba(120,60,60,.28); --pulse-0:rgba(217,147,127,0); --pulse-fill:rgba(217,147,127,.34);
+  --pin-a:#93305F; --pin-b:#4E1433; --pin-shadow:rgba(60,14,34,.42); --pin-drop:rgba(50,10,28,.28);
+  --label:rgba(255,250,248,.95); --label-line:rgba(184,128,110,.9); --label-shadow:rgba(110,50,60,.5);
+  --heart-shadow:rgba(150,87,76,.35);
+  --ui:rgba(106,33,69,.86); --ui-line:rgba(227,179,164,.7);
+}
+/* كل نسخة تُظهر نصوصها فقط */
+:root[data-v="um"] [data-for="abu"],:root:not([data-v="um"]) [data-for="um"]{display:none!important}
+*{box-sizing:border-box}
+html{height:100%;background:var(--beige)}
+body{height:100%;margin:0;overflow:hidden;background:var(--cream);color:var(--ink);font-family:var(--text);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+
+#view{position:relative;width:100%;height:100%;overflow:hidden;
+  background:
+    radial-gradient(90% 52% at 50% -6%, var(--bg-a) 0%, var(--bg-a0) 72%),
+    radial-gradient(75% 42% at 50% 108%, var(--bg-b) 0%, var(--bg-b0) 72%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 54%, var(--bg-3) 100%)}
+#dust{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+
+#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;margin:-960px 0 0 -540px;
+  transform:scale(var(--s,.3));transform-origin:50% 50%;direction:rtl}
+#stage.out{opacity:0;transition:opacity .6s ease}
+
+/* إضاءة ذهبية هادئة */
+.glow{position:absolute;border-radius:50%;pointer-events:none}
+.glow.a{left:-110px;top:-190px;width:1300px;height:1300px;
+  background:radial-gradient(closest-side, var(--glow-a), var(--glow-a0));
+  animation:breathe 6.5s ease-in-out infinite alternate}
+.glow.b{left:90px;top:1180px;width:900px;height:900px;
+  background:radial-gradient(closest-side, var(--glow-b), var(--glow-b0));
+  animation:breathe 8s -3s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.5;transform:scale(.9)}to{opacity:1;transform:scale(1.07)}}
+
+/* ── الإطار ── */
+#frame{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible}
+#frame path{fill:none;stroke:var(--accent);stroke-dasharray:1.01 2;stroke-dashoffset:1.01}
+#frame .ln{stroke-width:2.5}
+#frame .hl{stroke-width:1;opacity:.55}
+#frame .st{stroke-width:2}
+#frame .dot{fill:var(--accent);opacity:0;transform-box:fill-box;transform-origin:center}
+.play #frame path{animation:draw var(--t,.7s) var(--d,0s) cubic-bezier(.5,0,.25,1) both}
+.play #frame .dot{animation:pop .5s var(--d,0s) cubic-bezier(.3,1.6,.5,1) both}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+
+/* ── الرأس ── */
+.head{position:absolute;left:0;right:0;top:150px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.play .head{animation:lift 1.1s 6.4s cubic-bezier(.65,0,.25,1) both}
+@keyframes lift{from{transform:translateY(310px)}to{transform:none}}
+
+.verse{margin:0;padding:0 24px;font:400 53px/1.9 var(--quran);color:var(--ink);white-space:nowrap;opacity:0;
+  -webkit-mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat;
+          mask:linear-gradient(to left,#000 33.3%,transparent 50%) 0 0/300% 100% no-repeat}
+.verse b{font-weight:400;color:var(--accent)}
+.verse svg,.dua svg{display:inline-block;vertical-align:middle;fill:#fff;stroke:var(--accent);stroke-width:1.3;stroke-linejoin:round;filter:drop-shadow(0 2px 3px var(--heart-shadow))}
+.verse svg{position:absolute;left:20px;top:50%;width:34px;height:34px;margin-top:-17px}
+/* البسملة: القلب في الهامش حتى يبقى النص في المنتصف، وهامش علوي/سفلي حتى لا يقصّ القناع أطراف الحروف */
+:root[data-v="um"] .verse{position:relative;padding:8px 66px;margin-top:-8px;margin-bottom:-8px}
+.play .verse{animation:wipe 1.5s 2s cubic-bezier(.4,0,.2,1) both}
+@keyframes wipe{
+  from{opacity:0;-webkit-mask-position:0 0;mask-position:0 0}
+  12%{opacity:1}
+  to{opacity:1;-webkit-mask-position:100% 0;mask-position:100% 0}}
+
+.title{margin:8px 0 0;font-weight:400;display:flex;flex-direction:column;align-items:center}
+.kicker{font:var(--dr) calc(50px * var(--ds))/75px var(--display);color:var(--accent-deep);opacity:0}
+.play .kicker{animation:slide 1.05s 2.75s cubic-bezier(.2,.75,.2,1) both}
+@keyframes slide{from{opacity:0;transform:translateX(90px)}to{opacity:1;transform:none}}
+.name{display:block;padding:0 80px;margin:-21px 0 -24px}
+.name>span{display:block;opacity:0;font:var(--db) 250px/.9 var(--display);color:var(--ink-deep)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .name>span{background:linear-gradient(100deg,var(--ink-deep) 0 42%,var(--sheen) 50%,var(--ink-deep) 58% 100%) 0 0/300% 100%;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+}
+.play .name>span{animation:nameUp 1.25s 3.05s cubic-bezier(.16,.84,.24,1) both, sheen 2s 3.95s cubic-bezier(.4,0,.3,1) both}
+@keyframes nameUp{from{opacity:0;transform:translateY(var(--rise,100%))}15%{opacity:1}to{opacity:1;transform:none}}
+@keyframes sheen{from{background-position:0 0}to{background-position:100% 0}}
+
+.rule{direction:ltr;display:flex;align-items:center;justify-content:center;gap:16px;height:22px}
+.rule i{display:block;width:170px;height:1.5px;transform:scaleX(0)}
+.rule i:first-child{background:linear-gradient(to left,var(--accent),var(--accent-0));transform-origin:100% 50%}
+.rule i:last-child{background:linear-gradient(to right,var(--accent),var(--accent-0));transform-origin:0 50%}
+.rule b{display:block;width:12px;height:12px;border:1.5px solid var(--accent);transform:rotate(45deg);opacity:0}
+.play .rule i{animation:growX .95s 4.05s cubic-bezier(.3,.7,.2,1) both}
+.play .rule b{animation:gem .6s 3.95s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes gem{from{opacity:0;transform:rotate(45deg) scale(0)}to{opacity:1;transform:rotate(45deg) scale(1)}}
+
+.lead{margin:14px 0 0;font:var(--dr) calc(48px * var(--ds))/77px var(--display);color:var(--accent-deep);opacity:0}
+.play .lead{animation:rise 1.1s 4.3s cubic-bezier(.2,.7,.2,1) both}
+.body{margin:4px 0 0;font:500 calc(40px * var(--ts))/69px var(--text);color:var(--ink)}
+.body .l{display:block}
+.body .w{display:inline-block;opacity:0}
+.play .body .w{animation:rise .8s calc(5.05s + var(--i) * .085s) cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+
+/* ── بطاقة الخريطة ── */
+.where{position:absolute;left:0;right:0;top:784px;margin:0;text-align:center;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--ink-soft);opacity:0}
+.play .where{animation:rise .9s 7.15s cubic-bezier(.2,.7,.2,1) both}
+.map{position:absolute;left:120px;top:848px;width:840px;height:352px;display:block;opacity:0;color:inherit;text-decoration:none}
+.play .map{animation:cardIn 1.05s 7.25s cubic-bezier(.2,.7,.2,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(48px) scale(.94)}to{opacity:1;transform:none}}
+.mapclip{position:absolute;inset:0;border-radius:38px;overflow:hidden;background:var(--card);
+  box-shadow:0 0 0 2px var(--accent),0 0 0 11px var(--card-ring),0 0 0 12.5px var(--card-line),0 46px 70px -34px var(--card-shadow)}
+#mapcv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.compass{position:absolute;left:24px;top:22px;width:56px;height:56px;border-radius:50%;
+  background:var(--chip);box-shadow:0 0 0 1.5px var(--chip-line)}
+.compass svg{position:absolute;inset:0;width:100%;height:100%}
+
+.ring{position:absolute;left:386px;top:144px;width:68px;height:68px;border-radius:50%;opacity:0;
+  border:4px solid var(--pulse);box-shadow:0 0 18px var(--pulse-glow),0 0 0 1px var(--pulse-edge),inset 0 0 0 1.5px rgba(255,255,255,.7);
+  background:radial-gradient(closest-side, var(--pulse-0) 55%, var(--pulse-fill))}
+.play .ring{animation:pulse 2.6s var(--d) cubic-bezier(.15,.6,.3,1) infinite both}
+@keyframes pulse{0%{opacity:0;transform:scale(.2)}9%{opacity:1}100%{opacity:0;transform:scale(4.5)}}
+
+.pin{position:absolute;left:420px;top:178px;width:0;height:0;pointer-events:none}
+.pin .shadow{position:absolute;left:-24px;top:-8px;width:48px;height:16px;border-radius:50%;
+  background:var(--pin-shadow);filter:blur(3px);opacity:0}
+.play .pin .shadow{animation:shadow .95s 10.1s both}
+@keyframes shadow{0%{opacity:0;transform:scale(.15)}52%{opacity:1;transform:scale(1.15)}70%{opacity:.7;transform:scale(.8)}86%,100%{opacity:1;transform:scale(1)}}
+.pin svg{position:absolute;left:-44px;top:-116px;width:88px;height:116px;transform-origin:50% 100%;opacity:0;
+  filter:drop-shadow(0 6px 8px var(--pin-drop))}
+#pinfill stop:first-child{stop-color:var(--pin-a)}
+#pinfill stop:last-child{stop-color:var(--pin-b)}
+.pin .drop{fill:url(#pinfill);stroke:var(--accent-hi);stroke-width:2.5;stroke-linejoin:round}
+.pin .eye{fill:var(--ivory)}
+.pin .star{fill:var(--accent)}
+#needle .n{fill:var(--ink)}
+#needle .s{fill:var(--accent-hi)}
+#needle .hub{fill:var(--ivory);stroke:var(--accent-deep);stroke-width:1}
+.play .pin svg{animation:drop .95s 10.1s both}
+@keyframes drop{
+  0%{opacity:0;transform:translateY(-330px);animation-timing-function:cubic-bezier(.55,0,.9,.45)}
+  12%{opacity:1}
+  52%{opacity:1;transform:translateY(0) scale(1.13,.84);animation-timing-function:cubic-bezier(.2,.7,.3,1)}
+  70%{opacity:1;transform:translateY(-30px) scale(.97,1.04);animation-timing-function:cubic-bezier(.6,0,.8,.5)}
+  86%{opacity:1;transform:translateY(0) scale(1.05,.95);animation-timing-function:ease-out}
+  100%{opacity:1;transform:none}}
+
+.placewrap{position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;pointer-events:none}
+.place{display:inline-flex;align-items:center;padding:8px 38px 10px;border-radius:999px;white-space:nowrap;opacity:0;
+  background:var(--label);box-shadow:0 0 0 1.5px var(--label-line),0 16px 26px -12px var(--label-shadow);
+  font:800 calc(45px * var(--ts))/68px var(--text);color:var(--ink-deep)}
+.place em{font-style:normal;font-weight:500;color:var(--accent);margin:0 16px}
+.play .place{animation:labelIn .8s 10.95s cubic-bezier(.2,.8,.2,1) both}
+@keyframes labelIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+
+/* ── الموعد والاستقبال والختام ── */
+.foot{position:absolute;left:0;right:0;top:1254px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.when{display:flex;align-items:stretch;justify-content:center}
+.cell{width:370px;display:flex;flex-direction:column;align-items:center;opacity:0}
+.cell .k{display:inline-flex;align-items:center;gap:10px;font:500 calc(32px * var(--ts))/48px var(--text);color:var(--accent-deep)}
+.cell .k svg{width:30px;height:30px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cell .v{font:800 calc(48px * var(--ts))/70px var(--text);color:var(--ink-deep)}
+.sep{width:1.5px;background:linear-gradient(180deg,var(--accent-0),var(--accent),var(--accent-0));transform:scaleY(0)}
+.play .cell{animation:rise .85s var(--d) cubic-bezier(.2,.7,.2,1) both}
+.play .sep{animation:growY .7s 12.1s cubic-bezier(.3,.7,.2,1) both}
+@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.host{margin:24px 0 0;font:500 calc(34px * var(--ts))/54px var(--text);color:var(--ink-soft);opacity:0}
+.hostname{margin:-2px 0 0;font:var(--db) calc(60px * var(--ds))/84px var(--display);color:var(--ink-deep);opacity:0}
+.tel{margin:-4px 0 2px;display:flex;align-items:center;justify-content:center;gap:12px;direction:ltr;font:500 calc(34px * var(--ts))/46px var(--text);color:var(--ink-soft);opacity:0;font-variant-numeric:tabular-nums}
+.tel[hidden]{display:none}
+.tel svg{width:28px;height:28px;fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kin{margin:0;display:flex;align-items:baseline;justify-content:center;gap:20px;font:var(--db) calc(50px * var(--ds))/70px var(--display);color:var(--ink-deep);opacity:0}
+.kin span{font:500 calc(33px * var(--ts))/46px var(--text);color:var(--ink-soft)}
+.kin i{display:block;align-self:center;width:10px;height:10px;border:1.5px solid var(--accent);transform:rotate(45deg)}
+.closing{margin:12px 0 0;display:flex;align-items:center;gap:14px;font:var(--dr) calc(43px * var(--ds))/69px var(--display);color:var(--accent-deep);opacity:0}
+.closing svg{width:36px;height:36px;flex:none;fill:#fff;stroke:var(--accent);stroke-width:1.3;stroke-linejoin:round;
+  filter:drop-shadow(0 2px 3px var(--heart-shadow))}
+.wish{margin:30px auto 0;max-width:800px;font:500 calc(37px * var(--ts))/58px var(--text);color:var(--ink);text-wrap:balance;opacity:0}
+.dua{margin:22px 0 0;font:var(--dr) calc(44px * var(--ds))/70px var(--display);color:var(--accent-deep);opacity:0}
+.dua svg{width:36px;height:36px;margin-right:4px}
+:root[data-v="um"] .sign{margin-top:18px;font-size:calc(40px * var(--ts))}
+:root[data-v="um"] .body{font-size:calc(38px * var(--ts))}
+.sign{margin:0;display:flex;align-items:center;gap:22px;font:500 calc(35px * var(--ts))/56px var(--text);color:var(--ink);opacity:0}
+.sign b{font-weight:800;color:var(--ink-deep)}
+.sign::before,.sign::after{content:"";width:74px;height:1.5px}
+.sign::before{background:linear-gradient(to left,var(--accent),var(--accent-0))}
+.sign::after{background:linear-gradient(to right,var(--accent),var(--accent-0))}
+.play .host{animation:rise .9s 12.65s cubic-bezier(.2,.7,.2,1) both}
+.play .hostname{animation:rise .95s 12.9s cubic-bezier(.2,.7,.2,1) both}
+.play .tel{animation:rise .9s 13.1s cubic-bezier(.2,.7,.2,1) both}
+.play .kin{animation:rise .9s 13.35s cubic-bezier(.2,.7,.2,1) both}
+.play .closing{animation:rise .9s 13.8s cubic-bezier(.2,.7,.2,1) both}
+.play .closing svg{animation:beat 1.7s 14.6s ease-in-out infinite both}
+.play .wish{animation:rise .9s 12.7s cubic-bezier(.2,.7,.2,1) both}
+.play .dua{animation:rise .95s 13.3s cubic-bezier(.2,.7,.2,1) both}
+.play .dua svg{animation:beat 1.7s 14.6s ease-in-out infinite both}
+.play .sign{animation:rise .8s 14.15s cubic-bezier(.2,.7,.2,1) both}
+@keyframes beat{0%,36%,100%{transform:scale(1)}14%{transform:scale(1.2)}26%{transform:scale(.96)}}
+
+/* ── أزرار التحكم (تختفي أثناء التشغيل) ── */
+#ui{position:fixed;z-index:10;top:calc(12px + env(safe-area-inset-top,0px));left:calc(12px + env(safe-area-inset-left,0px));
+  display:flex;align-items:center;gap:8px;direction:ltr;opacity:0;pointer-events:none;transition:opacity .3s}
+#ui.on{opacity:1;pointer-events:auto}
+#ui button{width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--ui-line);
+  background:var(--ui);color:var(--ivory);display:grid;place-items:center;cursor:pointer}
+#ui [hidden]{display:none}
+#snd .off,#snd.muted .on{display:none}
+#snd.muted .off{display:inline}
+#hint{direction:rtl;white-space:nowrap;padding:9px 14px;border-radius:999px;border:1px solid var(--ui-line);
+  background:var(--ui);color:var(--ivory);font:500 13px/1.2 var(--text)}
+#ui button:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+#ui svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+
+<div id="view">
+  <canvas id="dust" aria-hidden="true"></canvas>
+
+  <div id="stage" dir="rtl" lang="ar">
+    <div class="glow a"></div>
+    <div class="glow b"></div>
+    <svg id="frame" viewBox="0 0 1080 1920" aria-hidden="true"></svg>
+
+    <header class="head">
+      <p class="verse" data-for="abu"><b>﴿</b>الْمَالُ وَالْبَنُونَ زِينَةُ الْحَيَاةِ الدُّنْيَا<b>﴾</b></p>
+      <p class="verse" data-for="um">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
+      <h1 class="title">
+        <span class="kicker">دعوة عقيقة المولود</span>
+        <span class="name"><span>حمد</span></span>
+      </h1>
+      <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
+      <p class="lead" data-for="abu">تماماً للفرحة واكتمالاً للسرور..</p>
+      <p class="body" data-for="abu">
+        <span class="l">يسرّني ويشرفني دعوتكم لمشاركتنا الفرحة</span>
+        <span class="l">وتناول طعام العقيقة.</span>
+      </p>
+      <p class="lead" data-for="um">بفضل الله وكرمه</p>
+      <p class="body" data-for="um">
+        <span class="l">أتشرف بدعوتكم لحضور عقيقة مولودي الغالي حمد</span>
+        <span class="l">ومشاركتنا فرحتنا بهذه المناسبة</span>
+      </p>
+    </header>
+
+    <p class="where">وذلك في منزلنا الكائن في</p>
+
+    <a class="map" href="https://maps.app.goo.gl/gVxQCN5kG6onzj8j8" target="_blank" rel="noopener" aria-label="الموقع: الربادي، المنازلة — افتحه في خرائط Google">
+      <div class="mapclip">
+        <canvas id="mapcv" aria-hidden="true"></canvas>
+        <div class="ring" style="--d:10.6s"></div>
+        <div class="ring" style="--d:11.47s"></div>
+        <div class="ring" style="--d:12.33s"></div>
+        <div class="pin" aria-hidden="true">
+          <div class="shadow"></div>
+          <svg viewBox="0 0 88 116">
+            <defs>
+              <linearGradient id="pinfill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0"/><stop offset="1"/>
+              </linearGradient>
+            </defs>
+            <path d="M44 113 C31 91 9 71 9 43 A35 35 0 1 1 79 43 C79 71 57 91 44 113 Z" class="drop"/>
+            <circle cx="44" cy="43" r="17" class="eye"/>
+            <path d="M44 31 L47.5 34.5 L52.5 34.5 L52.5 39.5 L56 43 L52.5 46.5 L52.5 51.5 L47.5 51.5 L44 55 L40.5 51.5 L35.5 51.5 L35.5 46.5 L32 43 L35.5 39.5 L35.5 34.5 L40.5 34.5 Z" class="star"/>
+          </svg>
+        </div>
+        <div class="compass" aria-hidden="true">
+          <svg viewBox="0 0 56 56" id="needle">
+            <path d="M28 9 L34 28 L22 28 Z" class="n"/>
+            <path d="M28 47 L34 28 L22 28 Z" class="s"/>
+            <circle cx="28" cy="28" r="2.6" class="hub"/>
+          </svg>
+        </div>
+      </div>
+      <div class="placewrap"><span class="place">الربادي<em>/</em>المنازلة</span></div>
+    </a>
+
+    <footer class="foot">
+      <div class="when">
+        <div class="cell" style="--d:12s">
+          <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.6"/><path d="M3.5 9.8h17M8 2.8v4M16 2.8v4"/></svg>اليوم</span>
+          <span class="v">غداً الإثنين</span>
+        </div>
+        <i class="sep" aria-hidden="true"></i>
+        <div class="cell" style="--d:12.22s">
+          <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.2 2"/></svg>الوقت</span>
+          <span class="v">بعد صلاة الظهر</span>
+        </div>
+      </div>
+      <p class="host" data-for="abu">في استقبالكم نيابةً عني والدي الغالي</p>
+      <p class="hostname" data-for="abu">أحمد نعمان سعيد</p>
+      <p class="tel" data-for="abu" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5h2.7l1.4 4-2 1.5a12 12 0 0 0 6.3 6.3l1.5-2 4 1.4v2.7a2 2 0 0 1-2.2 2C10.9 18.8 5.2 13.1 4.6 5.7a2 2 0 0 1 2-2.2z"/></svg><bdi dir="ltr"></bdi></p>
+      <p class="kin" data-for="abu"><span>وأبناء عمي</span>محمد أمين<i aria-hidden="true"></i>نبيل أمين</p>
+      <p class="closing" data-for="abu"><span>حضوركم تشريف، وفرحتنا تكتمل بوجودكم</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
+      <p class="wish" data-for="um">حضوركم يسعدنا، ودعواتكم له بالصلاح والبركة والعمر المديد</p>
+      <p class="dua" data-for="um">اللهم أنبته نباتًا حسنًا،<br>واجعله من مواليد السعادة والبركة. <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.6C6.4 15.9 3 12.9 3 9.1 3 6.3 5.2 4.2 7.9 4.2c1.6 0 3.1.8 4.1 2.1 1-1.3 2.5-2.1 4.1-2.1 2.7 0 4.9 2.1 4.9 4.9 0 3.8-3.4 6.8-9 11.5z"/></svg></p>
+      <p class="sign"><span data-for="abu">الداعي: <b>أبو سند</b></span><span data-for="um"><b>أم سند</b></span></p>
+    </footer>
+  </div>
+</div>
+
+<div id="ui">
+  <button id="replay" type="button" aria-label="إعادة التشغيل من البداية" title="إعادة التشغيل (R)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4.5v4.2h4.2"/></svg>
+  </button>
+  <button id="snd" type="button" aria-label="الصوت" aria-pressed="true" title="الصوت (M)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z"/><path class="on" d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+  </button>
+  <button id="fs" type="button" aria-label="ملء الشاشة" title="ملء الشاشة (F)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  </button>
+  <span id="hint">المس الشاشة لتشغيل الصوت</span>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ── التوقيت ── */
+const DURATION = 15000;   // مدة الحركة
+const HOLD     = 3000;    // ثبات البطاقة كاملة قبل الإعادة
+const FADE     = 600;
+const CAPTURE  = /[?&]capture\b/.test(location.search);
+const UM       = document.documentElement.getAttribute('data-v') === 'um';   // دعوة أم المولود
+if (UM) { document.title = 'دعوة أم سند لعقيقة حمد'; const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = '#FBEEEC'; }
+
+/* ألوان ما يُرسم على اللوحتين (جزيئات الضوء والخريطة) لكل نسخة */
+const C = UM ? {
+  mote: ['rgba(255,244,240,1)', 'rgba(236,178,164,.55)', 'rgba(226,160,150,0)'],
+  base: ['#FCEFEC', '#EFD2CE'], grid: 'rgba(170,108,96,.17)', hill: 'rgba(122,40,84,.05)', contour: 'rgba(176,114,100,.5)',
+  wadi: 'rgba(255,255,255,.42)', wadiLine: 'rgba(140,84,112,.3)',
+  field: ['rgba(122,40,84,.17)', 'rgba(122,40,84,.09)', 'rgba(214,150,130,.3)'], hatch: 'rgba(122,40,84,.2)', fieldEdge: 'rgba(150,92,82,.5)',
+  tree: 'rgba(122,40,84,.3)', roadEdge: 'rgba(176,114,100,.9)', road: '#FFFBF9', house: 'rgba(106,33,69,.6)',
+  halo: ['rgba(236,172,152,.6)', 'rgba(236,172,152,0)'], home: '#DDA493', homeEdge: '#4E1433',
+  haze: '255,250,248', edge: ['rgba(96,36,48,0)', 'rgba(96,36,48,.22)'],
+} : {
+  mote: ['rgba(255,246,220,1)', 'rgba(236,200,122,.55)', 'rgba(226,186,104,0)'],
+  base: ['#F7EED8', '#E9D8B2'], grid: 'rgba(160,120,44,.17)', hill: 'rgba(22,96,72,.052)', contour: 'rgba(160,120,44,.5)',
+  wadi: 'rgba(255,255,255,.4)', wadiLine: 'rgba(63,112,98,.3)',
+  field: ['rgba(22,96,72,.2)', 'rgba(22,96,72,.11)', 'rgba(196,156,74,.26)'], hatch: 'rgba(22,96,72,.22)', fieldEdge: 'rgba(140,104,34,.5)',
+  tree: 'rgba(22,96,72,.36)', roadEdge: 'rgba(166,124,44,.9)', road: '#FFFDF4', house: 'rgba(13,74,58,.62)',
+  halo: ['rgba(232,196,110,.6)', 'rgba(232,196,110,0)'], home: '#D3AB56', homeEdge: '#07352A',
+  haze: '255,252,243', edge: ['rgba(96,66,14,0)', 'rgba(96,66,14,.24)'],
+};
+
+const $ = s => document.querySelector(s);
+const view = $('#view'), stage = $('#stage'), ui = $('#ui');
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const smooth = (a, b, v) => { const x = clamp((v - a) / (b - a), 0, 1); return x * x * (3 - 2 * x); };
+const prng = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+
+/* ── الإطار الهندسي: خطّان يبدآن من أعلى الوسط ويلتقيان أسفله، ونجمة ثُمانية في كل ركن ── */
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', svg = $('#frame');
+  const add = (tag, at, d, t) => { const e = document.createElementNS(NS, tag);
+    for (const k in at) e.setAttribute(k, at[k]);
+    e.style.setProperty('--d', d + 's'); if (t) e.style.setProperty('--t', t + 's');
+    svg.appendChild(e); };
+  const line = (cls, x1, y1, x2, y2, d, t) => add('path', { class: cls, d: `M${x1} ${y1}L${x2} ${y2}`, pathLength: 1 }, d, t);
+  const star = (cx, cy, R, d) => { const a = +(R / Math.SQRT2).toFixed(2);
+    add('path', { class: 'st', d: `M${cx - a} ${cy - a}H${cx + a}V${cy + a}H${cx - a}Z`, pathLength: 1 }, d, .7);
+    add('path', { class: 'st', d: `M${cx} ${cy - R}L${cx + R} ${cy}L${cx} ${cy + R}L${cx - R} ${cy}Z`, pathLength: 1 }, d + .12, .7);
+    add('circle', { class: 'dot', cx, cy, r: +(R * .17).toFixed(1) }, d + .4); };
+  const L = 64, R = 1016, T = 64, B = 1856, M = 540, g = 40, cg = 27, h = 18;
+  for (const s of [1, -1]) {
+    const X = s > 0 ? R : L;
+    line('ln', M + s * cg, T, X - s * g, T, .15, .55);
+    line('ln', X, T + g, X, B - g, .62, .7);
+    line('ln', X - s * g, B, M + s * cg, B, 1.25, .45);
+    line('hl', M + s * (cg + 17), T + h, X - s * (g + 16), T + h, .27, .55);
+    line('hl', X - s * h, T + g + 16, X - s * h, B - g - 16, .74, .7);
+    line('hl', X - s * (g + 16), B - h, M + s * (cg + 17), B - h, 1.37, .45);
+    star(X, T, 26, .6);
+    star(X, B, 26, 1.2);
+  }
+  star(M, T, 15, 0);
+  star(M, B, 15, 1.6);
+})();
+
+/* ── رقم التواصل اختياري ولا يُكتب في الملف: يُمرَّر في الرابط (?tel=) ── */
+(() => { const el = document.querySelector('.tel'), v = (new URLSearchParams(location.search).get('tel') || el.querySelector('bdi').textContent).trim();
+  if (v) { el.querySelector('bdi').textContent = v; el.hidden = false; } })();
+
+/* ── نص الدعوة: كل كلمة تظهر بعد أختها ── */
+document.querySelectorAll('.body').forEach(body => { let i = 0;
+  body.querySelectorAll('.l').forEach(l => {
+    const words = l.textContent.trim().split(/\s+/); l.textContent = '';
+    words.forEach((w, k) => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w;
+      s.style.setProperty('--i', i++); l.appendChild(s); if (k < words.length - 1) l.appendChild(document.createTextNode(' ')); });
+  });
+});
+
+/* ── الاسم: يُضبط حجمه ليملأ العرض المطلوب، ويُحسب موضع حبره ليبقى التباعد ثابتاً مع أي خط ── */
+function fitName() {
+  const el = document.querySelector('.name>span'), wrap = el.parentNode, cs = getComputedStyle(el), g = document.createElement('canvas').getContext('2d');
+  const target = parseFloat(getComputedStyle(stage).getPropertyValue('--name-w')) || 310, font = px => `${cs.fontWeight} ${px}px ${cs.fontFamily}`;
+  g.font = font(200); let m = g.measureText(el.textContent);
+  const S = Math.round(Math.min(200 * target / m.width, 200 * 190 / ((m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || 1)));
+  g.font = font(S); m = g.measureText(el.textContent);
+  const L = Math.round(S * 1.8), base = (L - m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2 + m.fontBoundingBoxAscent;
+  const top = base - m.actualBoundingBoxAscent, bottom = base + m.actualBoundingBoxDescent;
+  el.style.fontSize = S + 'px'; el.style.lineHeight = L + 'px';
+  wrap.style.marginTop = Math.round(23 - top) + 'px'; wrap.style.marginBottom = Math.round(44 - (L - bottom)) + 'px';
+  wrap.style.clipPath = `inset(${Math.round(top - 18)}px 0 ${Math.round(L - bottom - 22)}px 0)`;
+  wrap.style.setProperty('--rise', Math.round(bottom - top + 60) + 'px');
+}
+
+/* ── جزيئات الضوء ── */
+const dcv = $('#dust'), dx = dcv.getContext('2d');
+const mote = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, C.mote[0]); gr.addColorStop(.35, C.mote[1]); gr.addColorStop(1, C.mote[2]);
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return c; })();
+const motes = (() => { const r = prng(7), a = [];
+  for (let i = 0; i < 58; i++) { const big = i < 8;
+    a.push({ x: r(), y: r(), r: big ? 46 + r() * 60 : 3 + r() * r() * 11, sp: (big ? .004 : .007) + r() * .016,
+      sw: r() * 6.28, sa: .008 + r() * .022, tw: r() * 6.28, tf: .5 + r() * 1.3, a: big ? .1 + r() * .1 : .3 + r() * .6 }); }
+  return a; })();
+let unit = 1;
+function drawDust(tt) {
+  const w = dcv.width, h = dcv.height, s = tt / 1000, fade = clamp(tt / 1800, 0, 1);
+  dx.clearRect(0, 0, w, h);
+  for (const p of motes) {
+    const y = ((p.y - p.sp * s) % 1 + 1) % 1, x = p.x + Math.sin(s * .3 + p.sw) * p.sa, r = p.r * unit;
+    dx.globalAlpha = p.a * (.55 + .45 * Math.sin(s * p.tf + p.tw)) * fade;
+    dx.drawImage(mote, x * w - r, y * (h + 2 * r) - r - r, r * 2, r * 2);
+  }
+  dx.globalAlpha = 1;
+}
+
+/* ── الخريطة: أرض مدرّجات جبلية تُرسم بالكود، والكاميرا تهبط نحو البيت ── */
+const MW = 840, MH = 352, OX = 420, OY = 178;      // نقطة الدبوس داخل البطاقة
+const Z0 = .14, D0 = 7600, D1 = 10350, ROT0 = -.55; // بداية ونهاية الهبوط
+const mcv = $('#mapcv'), mx = mcv.getContext('2d'), needle = $('#needle');
+let mk = 1;
+
+const world = (() => {
+  const r = prng(1447), rr = (a, b) => a + (b - a) * r();
+  const blob = (cx, cy, rad, ph, amp) => { const n = 40, pts = [], p = new Path2D();
+    for (let i = 0; i < n; i++) { const a = i / n * 6.2832;
+      const k = 1 + amp * (.55 * Math.sin(a + ph[0]) + .45 * Math.sin(2 * a + ph[1]) + .28 * Math.sin(3 * a + ph[2]) + .14 * Math.sin(5 * a + ph[3]));
+      pts.push([cx + Math.cos(a) * rad * k, cy + Math.sin(a) * rad * k]); }
+    p.moveTo((pts[n - 1][0] + pts[0][0]) / 2, (pts[n - 1][1] + pts[0][1]) / 2);
+    for (let i = 0; i < n; i++) { const a = pts[i], b = pts[(i + 1) % n]; p.quadraticCurveTo(a[0], a[1], (a[0] + b[0]) / 2, (a[1] + b[1]) / 2); }
+    p.closePath(); return p; };
+  const spline = pts => { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 0; i < pts.length - 1; i++) { const a = pts[Math.max(0, i - 1)], b = pts[i], c = pts[i + 1], d = pts[Math.min(pts.length - 1, i + 2)];
+      p.bezierCurveTo(b[0] + (c[0] - a[0]) / 6, b[1] + (c[1] - a[1]) / 6, c[0] - (d[0] - b[0]) / 6, c[1] - (d[1] - b[1]) / 6, c[0], c[1]); }
+    return p; };
+  const wander = (x, y, ang, len, step, wig) => { const pts = [[x, y]]; let a = ang;
+    for (let d = 0; d < len; d += step) { a += rr(-wig, wig); a += (ang - a) * .12; x += Math.cos(a) * step; y += Math.sin(a) * step; pts.push([x, y]); }
+    return pts; };
+  const quad = (cx, cy, w, h, rot, jit) => { const c = Math.cos(rot), s = Math.sin(rot);
+    return [[-w, -h], [w, -h], [w, h], [-w, h]].map(([px, py]) => { px = px / 2 + rr(-jit, jit); py = py / 2 + rr(-jit, jit);
+      return [cx + px * c - py * s, cy + px * s + py * c]; }); };
+  const poly = q => { const p = new Path2D(); q.forEach((v, i) => i ? p.lineTo(v[0], v[1]) : p.moveTo(v[0], v[1])); p.closePath(); return p; };
+
+  // الجبال: حلقات كنتورية متداخلة
+  const hills = [];
+  for (let n = 0; n < 600 && hills.length < 30; n++) {
+    const ang = rr(0, 6.2832), dist = 250 + Math.pow(r(), .8) * 3500, x = Math.cos(ang) * dist, y = Math.sin(ang) * dist;
+    let rad = rr(220, 540) * (1 + dist / 4200); rad = Math.min(rad, (dist - 170) / 1.2);
+    if (rad < 110 || hills.some(h => Math.hypot(h.x - x, h.y - y) < (h.rad + rad) * .6)) continue;
+    const ph = [rr(0, 6.3), rr(0, 6.3), rr(0, 6.3), rr(0, 6.3)], nr = Math.round(rr(5, 8)), da = rr(0, 6.3), rings = [];
+    for (let k = 0; k < nr; k++) rings.push(blob(x + Math.cos(da) * rad * .07 * k, y + Math.sin(da) * rad * .07 * k,
+      rad * Math.pow(1 - k / nr, .9), ph.map((p, i) => p + k * .1 * (i + 1)), .2));
+    hills.push({ x, y, rad, rings });
+  }
+
+  // الطرق والوادي
+  const J = [-34, 112];   // مفرق القرية على الطريق العام
+  const main = spline(wander(J[0], J[1], 3.02, 4200, 170, .26).reverse().concat(wander(J[0], J[1], -.2, 4200, 170, .26).slice(1)));
+  const side = [
+    spline(wander(640, 40, -1.25, 3600, 180, .3)),
+    spline(wander(-760, 190, 1.9, 3600, 180, .3)),
+  ];
+  const lanes = [
+    spline([J, [-22, 70], [-4, 34], [2, 6]]),
+    spline([[2, 6], [40, -42], [112, -78], [205, -92], [330, -150]]),
+    spline([[-22, 70], [-96, 44], [-170, 52], [-262, 8]]),
+  ];
+  const wadi = spline(wander(-2600, -1500, .52, 6200, 230, .42));
+
+  // الحقول المدرّجة حول القرية
+  const fields = [];
+  for (let n = 0; n < 200 && fields.length < 26; n++) {
+    const ang = rr(0, 6.2832), dist = rr(120, 760), cx = Math.cos(ang) * dist, cy = Math.sin(ang) * dist * .8;
+    const w = rr(80, 170), h = rr(54, 110);
+    if (fields.some(f => Math.hypot(f.cx - cx, f.cy - cy) < (f.w + w) * .56)) continue;
+    const q = quad(cx, cy, w, h, .32 + rr(-.3, .3), 9), hatch = new Path2D(), m = Math.round(h / 15);
+    for (let i = 1; i < m; i++) { const u = i / m;
+      hatch.moveTo(q[0][0] + (q[3][0] - q[0][0]) * u, q[0][1] + (q[3][1] - q[0][1]) * u);
+      hatch.lineTo(q[1][0] + (q[2][0] - q[1][0]) * u, q[1][1] + (q[2][1] - q[1][1]) * u); }
+    fields.push({ cx, cy, w, path: poly(q), hatch, kind: fields.length % 3 });
+  }
+
+  // بيوت القرية + البيت المقصود في المركز
+  const houses = [];
+  for (let n = 0; n < 200 && houses.length < 17; n++) {
+    const ang = rr(0, 6.2832), dist = rr(44, 230), cx = Math.cos(ang) * dist, cy = Math.sin(ang) * dist * .75, w = rr(15, 30);
+    if (houses.some(b => Math.hypot(b.cx - cx, b.cy - cy) < 36)) continue;
+    houses.push({ cx, cy, path: poly(quad(cx, cy, w, w * rr(.65, 1), .32 + rr(-.25, .25), 0)) });
+  }
+  const home = poly(quad(0, 0, 34, 27, .32, 0));
+
+  const trees = new Path2D();
+  for (let i = 0; i < 90; i++) { const ang = rr(0, 6.2832), dist = rr(70, 980), x = Math.cos(ang) * dist, y = Math.sin(ang) * dist * .8, tr = rr(4, 8);
+    trees.moveTo(x + tr, y); trees.arc(x, y, tr, 0, 6.2832); }
+
+  return { hills, main, side, lanes, wadi, fields, houses, home, trees };
+})();
+
+const cloudSprites = [11, 23, 37].map(seed => { const c = document.createElement('canvas'); c.width = 420; c.height = 260;
+  const g = c.getContext('2d'), r = prng(seed);
+  for (let i = 0; i < 18; i++) { const x = 105 + r() * 210, y = 100 + r() * 60, rad = 46 + r() * 58, gr = g.createRadialGradient(x, y, 0, x, y, rad);
+    gr.addColorStop(0, 'rgba(255,255,255,.5)'); gr.addColorStop(.55, 'rgba(255,255,255,.2)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+  return c; });
+const clouds = (() => { const r = prng(99), a = [];
+  for (let i = 0; i < 11; i++) a.push({ x: (r() - .5) * 880, y: (r() - .5) * 400, w: 300 + r() * 300, d: .16 + r() * .46, a: .8 + r() * .2, s: i % 3, vx: (r() - .5) * 16 });
+  return a.sort((p, q) => q.d - p.d); })();
+
+function drawMap(t) {
+  const c = mx, p = clamp((t - D0) / (D1 - D0), 0, 1);
+  const e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;                 // تسارع ثم هبوط ناعم
+  const z = Z0 * Math.pow(1 / Z0, e) * (1 + .045 * clamp((t - D1) / 8000, 0, 1));    // تقريب أُسّي ثم زحف خفيف
+  const rot = ROT0 * (1 - e);
+  const px = 1 / z;                                                                   // بكسل واحد على الشاشة
+  const vr = 520 / z;                                                                 // نصف قطر المشهد
+
+  c.setTransform(mk, 0, 0, mk, 0, 0);
+  const base = c.createLinearGradient(0, 0, MW, MH);
+  base.addColorStop(0, C.base[0]); base.addColorStop(1, C.base[1]);
+  c.fillStyle = base; c.fillRect(0, 0, MW, MH);
+
+  c.translate(OX, OY); c.rotate(rot); c.scale(z, z);
+  c.lineJoin = c.lineCap = 'round';
+
+  // شبكة الإحداثيات
+  c.beginPath();
+  const G = 600, n = Math.ceil(vr / G);
+  for (let i = -n; i <= n; i++) { c.moveTo(i * G, -vr); c.lineTo(i * G, vr); c.moveTo(-vr, i * G); c.lineTo(vr, i * G); }
+  c.strokeStyle = C.grid; c.lineWidth = px; c.stroke();
+
+  // الجبال
+  c.fillStyle = C.hill; c.strokeStyle = C.contour; c.lineWidth = 1.2 * px;
+  for (const h of world.hills) {
+    if (Math.hypot(h.x, h.y) - h.rad * 1.5 > vr) continue;
+    h.rings.forEach((ring, k) => { c.fill(ring); if (z > .3 || k % 2 === 0) c.stroke(ring); });
+  }
+
+  // الوادي
+  c.strokeStyle = C.wadi; c.lineWidth = Math.max(34, 2.5 * px); c.stroke(world.wadi);
+  c.strokeStyle = C.wadiLine; c.lineWidth = 1.1 * px; c.setLineDash([14 * px, 10 * px]); c.stroke(world.wadi); c.setLineDash([]);
+
+  // الحقول (تظهر مع الاقتراب)
+  const near = smooth(.26, .6, z);
+  if (near > 0) {
+    c.globalAlpha = near;
+    for (const f of world.fields) {
+      c.fillStyle = C.field[f.kind]; c.fill(f.path);
+      c.strokeStyle = C.hatch; c.lineWidth = px; c.stroke(f.hatch);
+      c.strokeStyle = C.fieldEdge; c.lineWidth = 1.1 * px; c.stroke(f.path);
+    }
+    c.fillStyle = C.tree; c.fill(world.trees);
+    c.globalAlpha = 1;
+  }
+
+  // الطرق
+  const road = (path, w, alpha) => { c.globalAlpha = alpha;
+    c.strokeStyle = C.roadEdge; c.lineWidth = Math.max(w + 3.2, 3.4 * px); c.stroke(path);
+    c.strokeStyle = C.road; c.lineWidth = Math.max(w, 1.9 * px); c.stroke(path); };
+  const mid = smooth(.18, .4, z);
+  if (mid > 0) world.side.forEach(s => road(s, 9, mid));
+  road(world.main, 15, 1);
+  if (near > 0) world.lanes.forEach(l => road(l, 7, near));
+  c.globalAlpha = 1;
+
+  // القرية والبيت
+  if (near > 0) {
+    c.globalAlpha = near;
+    c.fillStyle = C.house;
+    for (const b of world.houses) c.fill(b.path);
+    const halo = c.createRadialGradient(0, 0, 0, 0, 0, 74);
+    halo.addColorStop(0, C.halo[0]); halo.addColorStop(1, C.halo[1]);
+    c.fillStyle = halo; c.fillRect(-74, -74, 148, 148);
+    c.fillStyle = C.home; c.fill(world.home);
+    c.strokeStyle = C.homeEdge; c.lineWidth = 1.6; c.stroke(world.home);
+    c.globalAlpha = 1;
+  }
+
+  // السحاب والضباب: تكبر وتتفرّق كلما اقتربت الكاميرا ثم تختفي
+  c.setTransform(mk, 0, 0, mk, 0, 0);
+  const haze = .52 * Math.pow(1 - e, 1.5);
+  if (haze > .004) { c.fillStyle = `rgba(${C.haze},${haze})`; c.fillRect(0, 0, MW, MH); }
+  if (e < .64) for (const cl of clouds) {
+    const u = (cl.d - e) / cl.d; if (u <= 0) continue;
+    const s = 1 / (Math.pow(u, .9) + .04), w = cl.w * s, h = w * .62;
+    c.globalAlpha = cl.a * smooth(0, .32, u);
+    c.drawImage(cloudSprites[cl.s], OX + (cl.x + cl.vx * t / 1000) * s - w / 2, OY + cl.y * s - h / 2, w, h);
+  }
+  c.globalAlpha = 1;
+
+  // تظليل الأطراف ولمعة علوية
+  const vg = c.createRadialGradient(OX, OY, 130, OX, OY, 520);
+  vg.addColorStop(0, C.edge[0]); vg.addColorStop(1, C.edge[1]);
+  c.fillStyle = vg; c.fillRect(0, 0, MW, MH);
+  const sh = c.createLinearGradient(0, 0, 0, MH * .45);
+  sh.addColorStop(0, 'rgba(255,255,255,.2)'); sh.addColorStop(1, 'rgba(255,255,255,0)');
+  c.fillStyle = sh; c.fillRect(0, 0, MW, MH * .45);
+
+  needle.style.transform = `rotate(${rot}rad)`;
+}
+
+/* ── الصوت: دقّة سقوط الدبوس ونبضة واحدة بعدها فقط، تُركَّب بالكود وتُعزف متزامنة مع اللوحة ── */
+const SR = 44100, A_LEN = (DURATION + HOLD) / 1000;
+function score(ac) {
+  const out = ac.createDynamicsCompressor();
+  out.threshold.value = -16; out.knee.value = 12; out.ratio.value = 3; out.attack.value = .003; out.release.value = .18;
+  out.connect(ac.destination);
+  // صدى خفيف
+  const r = prng(31), ir = ac.createBuffer(2, Math.round(SR * 1.7), SR);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < d.length; i++) d[i] = (r() * 2 - 1) * Math.pow(1 - i / d.length, 3.4); }
+  const verb = ac.createConvolver(), wet = ac.createGain(); verb.buffer = ir; wet.gain.value = .5; verb.connect(wet); wet.connect(out);
+
+  // نغمة: تردد ينزلق من f0 إلى f1، تبدأ بهجمة att وتخفت خلال dur
+  const tone = (t, f0, f1, dur, g, o) => { o = o || {}; const s = ac.createOscillator(), a = ac.createGain(), p = ac.createStereoPanner(), w = ac.createGain();
+    s.type = o.type || 'sine'; s.frequency.setValueAtTime(f0, t); if (f1 !== f0) s.frequency.exponentialRampToValueAtTime(f1, t + (o.glide || dur));
+    a.gain.setValueAtTime(0, t); a.gain.linearRampToValueAtTime(g, t + (o.att || .006));
+    if (o.hold) a.gain.setValueAtTime(g, t + o.att + o.hold);
+    a.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    p.pan.value = o.pan || 0; w.gain.value = o.send === undefined ? .2 : o.send;
+    s.connect(a); a.connect(p); p.connect(out); p.connect(w); w.connect(verb); s.start(t); s.stop(t + dur + .05); };
+  // الصوت الوحيد: ارتطام الدبوس بالموقع وارتدادته الخفيفة، ثم نبضة رادار واحدة
+  tone(10.595, 170, 52, .36, .6, { send: .12 }); tone(10.595, 340, 170, .1, .34, { type: 'triangle', send: .12 }); tone(10.595, 900, 520, .035, .14, { send: .1 });
+  tone(10.917, 150, 70, .16, .2, { send: .1 }); tone(10.917, 300, 160, .06, .1, { type: 'triangle', send: .1 });
+  tone(10.62, 880, 852, 1, .26, { send: .8, att: .008 }); tone(10.62, 1760, 1704, .5, .036, { send: .8 });
+}
+const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+const audio = !OAC ? Promise.resolve(null) : new Promise((res, rej) => {
+  const off = new OAC(2, Math.ceil(SR * A_LEN), SR); score(off);
+  off.oncomplete = e => res(e.renderedBuffer); const p = off.startRendering(); if (p && p.then) p.then(res, rej);
+}).then(buf => { let pk = 0;                                   // توحيد مستوى الصوت
+  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch); for (let i = 0; i < d.length; i++) pk = Math.max(pk, Math.abs(d[i])); }
+  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch), k = .7 / (pk || 1); for (let i = 0; i < d.length; i++) d[i] *= k; }
+  abuf = buf; if (actx && started && !frozen && !asrc) playAudio((performance.now() - t0) / 1000); return buf;
+}).catch(() => null);
+let abuf = null, actx = null, again = null, asrc = null, soundOn = true;
+function stopAudio() { if (asrc) { try { asrc.stop(); } catch (e) {} asrc = null; } }
+function playAudio(at) {
+  stopAudio(); if (!actx || !abuf || at >= abuf.duration) return;
+  const s = actx.createBufferSource(); s.buffer = abuf; s.connect(again); s.onended = () => { if (asrc === s) asrc = null; };
+  s.start(0, Math.max(0, at)); asrc = s;
+}
+/* المتصفح لا يسمح بالصوت إلا بعد أول لمسة: عندها يلتحق الصوت بالحركة من موضعها */
+function unlockAudio() {
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC || !OAC) return;
+  if (!actx) { actx = new AC(); again = actx.createGain(); again.gain.value = soundOn ? 1 : 0; again.connect(actx.destination);
+    $('#hint').hidden = true; if (started && !frozen && !leaving) playAudio((performance.now() - t0) / 1000); }
+  if (actx.state === 'suspended') actx.resume();
+}
+function toggleSound() { soundOn = !soundOn; if (again) again.gain.value = soundOn ? 1 : 0;
+  $('#snd').classList.toggle('muted', !soundOn); $('#snd').setAttribute('aria-pressed', String(soundOn)); }
+
+/* ── المقاس ── */
+function fit() {
+  const w = view.clientWidth, h = view.clientHeight, s = Math.min(w / 1080, h / 1920), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  stage.style.setProperty('--s', s);
+  dcv.width = Math.round(w * dpr); dcv.height = Math.round(h * dpr); unit = s * dpr;
+  mk = clamp(Math.ceil(s * dpr * 4) / 4, 1, 2);
+  mcv.width = Math.round(MW * mk); mcv.height = Math.round(MH * mk);
+  render(lastT, lastTT);
+}
+
+/* ── المحرّك ── */
+let started = false, leaving = false, frozen = false, loop = true, t0 = 0, startAt = 0, born = 0, lastT = -1, lastTT = 0, loopTimer = 0;
+function render(t, tt) { lastT = t; lastTT = tt; drawDust(tt); if (t >= 6900) drawMap(t); }
+
+function restart(lead) {
+  clearTimeout(loopTimer); stopAudio();
+  stage.classList.remove('play'); void stage.offsetWidth; stage.classList.remove('out');
+  if (frozen && document.getAnimations) for (const a of document.getAnimations()) a.play();   // الإضاءة الخلفية تكمل
+  started = leaving = frozen = false; startAt = performance.now() + (lead || 0);
+}
+function tick(now) {
+  if (!frozen) {
+    if (!born) born = now;
+    if (!started && now >= startAt) { stage.classList.add('play'); t0 = now; started = true; playAudio(0); }
+    const t = started ? now - t0 : -1;
+    render(t, now - born);
+    if (started && !leaving && t >= DURATION + HOLD) {
+      if (loop) { leaving = true; stage.classList.add('out'); loopTimer = setTimeout(() => restart(350), FADE); }
+      else if (!ui.classList.contains('on')) showUI(1e9);
+    }
+  }
+  requestAnimationFrame(tick);
+}
+/* تثبيت اللوحة عند لحظة معيّنة (للتصدير إطاراً بإطار، ولمن عطّل الحركة في جهازه) */
+function seek(ms) {
+  frozen = true; stage.classList.remove('out'); stage.classList.add('play'); void stage.offsetWidth;
+  if (document.getAnimations) for (const a of document.getAnimations()) { a.pause(); a.currentTime = ms; }
+  render(ms, ms);
+}
+
+/* ── أزرار التحكم ── */
+let hideTimer = 0;
+function showUI(ms) { ui.classList.add('on'); clearTimeout(hideTimer); hideTimer = setTimeout(hideUI, ms || 2800); }
+function hideUI() { ui.classList.remove('on'); clearTimeout(hideTimer); }
+function replay() { hideUI(); if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); restart(800); }
+const root = document.documentElement;
+const fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
+function toggleFS() {
+  try {
+    if (fsOn()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else { const p = (root.requestFullscreen || root.webkitRequestFullscreen).call(root); if (p && p.catch) p.catch(() => {}); }
+  } catch (e) {}
+  hideUI();
+}
+if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) $('#fs').hidden = true;
+$('#replay').addEventListener('click', replay);
+$('#fs').addEventListener('click', toggleFS);
+$('#snd').addEventListener('click', toggleSound);
+if (!OAC || !(window.AudioContext || window.webkitAudioContext)) { $('#snd').hidden = true; $('#hint').hidden = true; }
+window.addEventListener('pointerdown', unlockAudio, true);
+window.addEventListener('keydown', unlockAudio, true);
+ui.addEventListener('focusin', () => showUI());
+view.addEventListener('pointerdown', () => showUI());
+let lastMove = 0;
+window.addEventListener('mousemove', e => { if (e.timeStamp - lastMove > 400) { lastMove = e.timeStamp; showUI(); } });
+window.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('button')) return;
+  if (e.key === 'r' || e.key === 'R' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); replay(); }
+  else if (e.key === 'f' || e.key === 'F') toggleFS();
+  else if (e.key === 'm' || e.key === 'M') toggleSound();
+});
+document.addEventListener('fullscreenchange', hideUI);
+window.addEventListener('resize', fit);
+
+/* ── البدء بعد تحميل الخطوط ── */
+const ready = Promise.race([
+  (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(),
+  new Promise(r => setTimeout(r, 3500)),
+]).then(() => { fitName(); fit(); });
+window.invite = { ready, seek, replay, audio, refit: () => { fitName(); fit(); }, DURATION, HOLD };
+
+fit();
+if (!CAPTURE) ready.then(() => {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    loop = false; seek(DURATION); requestAnimationFrame(tick); showUI(1e9);   // بطاقة ثابتة، والحركة عند الضغط على زر الإعادة
+  } else {
+    startAt = performance.now() + 250; requestAnimationFrame(tick); showUI(5200);
+  }
+});
+})();
+</script>
+</body>
+</html>

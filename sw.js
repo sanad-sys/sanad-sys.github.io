@@ -1,6 +1,6 @@
 /* سند — يحفظ صفحة الغلاف والأيقونات في الجوال عشان تفتح بسرعة
    (بيانات النظام نفسها ما تنحفظ هنا، تروح للشيت مباشرة) */
-var CACHE = 'sanad-v9';   // v9.84: اهتزاز التعاميم
+var CACHE = 'sanad-v10';   // v9.84: اهتزاز التعاميم · v9.87: الضغط على الإشعار يفتح مكانه
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png', './favicon.png'];
 
 self.addEventListener('install', function (e) {
@@ -35,14 +35,20 @@ self.addEventListener('push', function (e) {
   var m = d.data || d, n = d.notification || {};
   e.waitUntil(self.registration.showNotification(m.t || n.title || 'سند', {
     body: m.b || n.body || '', icon: 'icon-192.png', badge: 'icon-192.png', tag: m.tag || 'sanad', renotify: true,
-    dir: 'auto', vibrate: /^sanad-crc:/.test(m.tag || '') ? [240, 120, 240, 120, 420] : [200, 100, 200], requireInteraction: /^sanad-crc:/.test(m.tag || ''), data: { u: m.u || './' }   // v9.84: التعاميم الرسمية باهتزاز مميز وتبقى لين تنفتح
+    dir: 'auto', vibrate: /^sanad-crc:/.test(m.tag || '') ? [240, 120, 240, 120, 420] : [200, 100, 200], requireInteraction: /^sanad-crc:/.test(m.tag || ''), data: { u: m.u || './', n: String(m.n || '').slice(0, 120) }   // v9.87: n = رقم الشي (مهمة · تعميم) · v9.84: التعاميم الرسمية باهتزاز مميز وتبقى لين تنفتح
   }));
 });
+/* v9.87: الضغط على الإشعار ← سند يفتح على مكانه بالضبط: مفتوح ← نرسل له الرقم (push-open) ونقدّمه · مسكّر ← نفتحه بالرابط (?n=) */
 self.addEventListener('notificationclick', function (e) {
   e.notification.close();
-  var u = new URL((e.notification.data && e.notification.data.u) || './', self.registration.scope).href;
+  var dd = e.notification.data || {}, n = String(dd.n || '').slice(0, 120);
+  var u = new URL(dd.u || (n ? './?n=' + encodeURIComponent(n) : './'), self.registration.scope).href;
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (ws) {
-    for (var i = 0; i < ws.length; i++) if (ws[i].url.indexOf(self.registration.scope) === 0 && 'focus' in ws[i]) return ws[i].focus();
+    for (var i = 0; i < ws.length; i++) if (ws[i].url.indexOf(self.registration.scope) === 0 && 'focus' in ws[i]) {
+      var w = ws[i];
+      if (n) { try { w.postMessage({ sanad: 'push-open', n: n }); } catch (x) {} }
+      return w.focus().catch(function () { return self.clients.openWindow(u); });
+    }
     return self.clients.openWindow(u);
   }));
 });

@@ -10,6 +10,12 @@
 <script>
 /* لون سند (يرسله من داخل الإطار): آخر وضع محفوظ ← شاشة الفتح تطلع بنفس اللون من البداية */
 try { var T0 = JSON.parse(localStorage.getItem('sanad_theme') || 'null'), H6 = /^#[0-9a-fA-F]{6}$/;
+  /* سند 9.83: الوضع «تلقائي» ← نتبع الجوال من أول ثانية (مو آخر لون انحفظ) — بلون كل وضع لو انحفظ قبل */
+  if (T0 && T0.mode === 'auto') {
+    var SD = null; try { if (window.matchMedia) SD = matchMedia('(prefers-color-scheme: dark)').matches; } catch (x) {}
+    if (SD === null) { var hh = new Date().getHours(); SD = hh >= 18 || hh < 6; }
+    T0.dark = SD; T0.bg = SD ? (H6.test(T0.bgD || '') ? T0.bgD : '#0E1714') : (H6.test(T0.bgL || '') ? T0.bgL : '#FAF8F3');
+  }
   if (T0 && H6.test(T0.bg)) {
     document.querySelector('meta[name="theme-color"]').setAttribute('content', T0.bg);
     document.querySelector('meta[name="color-scheme"]').setAttribute('content', T0.dark ? 'dark' : 'light');
@@ -36,6 +42,7 @@ html,body{margin:0;height:100%;background:var(--sbg,#FAF8F3);overflow:hidden;fon
 #splash .u{opacity:0;transform-box:fill-box;transform-origin:bottom;transform:scaleY(0);animation:gr .45s cubic-bezier(.2,.8,.2,1) forwards}
 #splash .q{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:pop .45s 1.7s cubic-bezier(.3,1.8,.5,1) forwards}
 #splash .wm{margin-top:18px;font-family:'Michroma',system-ui,sans-serif;font-size:clamp(22px,8vw,30px);letter-spacing:.18em;color:#0B5D4B;direction:ltr;opacity:0;animation:fi .5s 2.1s forwards}
+#splash .ru{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:clamp(20px,6.5vw,26px);line-height:1.2;color:#C9A24D;opacity:0;animation:fi .5s 2.3s forwards}   /* سند 9.83: «SANAD · سَنَد» مثل شعار التطبيق */
 #splash .sy{font-family:'Michroma',system-ui,sans-serif;font-size:8px;letter-spacing:.4em;color:#5C6B66;display:flex;align-items:center;gap:8px;margin-top:6px;opacity:0;animation:fi .4s 2.5s forwards}
 #splash .sy i{display:block;width:22px;height:1px;background:#C9A24D}
 #splash .pb{width:160px;height:3px;background:#E7E2D6;border-radius:2px;margin-top:22px;overflow:hidden}
@@ -73,7 +80,7 @@ html,body{margin:0;height:100%;background:var(--sbg,#FAF8F3);overflow:hidden;fon
 #psh .y{background:#0B5D4B;color:#fff}#psh .n{background:none;color:#5C6B66;margin-top:6px;font-weight:400}
 /* الوضع الداكن (من سند): النصوص تبان على الخلفية الداكنة */
 html.dk body,html.dk #off b{color:#E6EEEA}
-html.dk #splash .wm,html.dk #splash .ft b{color:#9FE1CB}
+html.dk #splash .wm,html.dk #splash .ft b{color:#9FE1CB}html.dk #splash .ru{color:#E4C777}
 html.dk #splash .sy,html.dk #splash .pc,html.dk #off p{color:#9AABA4}
 html.dk #splash .pb{background:#24332E}
 html.dk #psh .pn{background:#15211D;color:#E6EEEA}html.dk #psh p,html.dk #psh .n{color:#9AABA4}
@@ -99,6 +106,7 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     <path class="q" d="M95 23L88.6 39.2 78.7 29.3Z" fill="#FAF8F3"/>
   </svg>
   <div class="wm">SANAD</div>
+  <div class="ru">سَنَد</div>
   <div class="sy"><i></i>SYSTEM<i></i></div>
   <div class="pb"><i></i></div>
   <p class="pc" id="pc">جاري فتح سند…</p>
@@ -128,7 +136,7 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     if (hidden) return; hidden = true; clearTimeout(slowT);
     splash.classList.add('done');
     /* ما نقطع الحركة بنصها: أقل شي ١٫٦ ثانية، وأقصى شي لما يجهز النظام */
-    var wait = QUICK ? 0 : Math.max(0, 1600 - (Date.now() - t0));   // الرجوع السريع: بدون انتظار الحركة
+    var wait = QUICK ? 0 : Math.max(0, 2700 - (Date.now() - t0));   // الرجوع السريع: بدون انتظار الحركة · 9.83: الحركة كاملة مرة وحدة (الدرع ثم «SANAD · سَنَد») — التطبيق ما يعيدها
     setTimeout(function () { if (!hidden) return; splash.classList.add('hide'); setTimeout(function () { if (hidden) splash.style.display = 'none'; }, 450); }, wait);
   }
   /* النظام يقول "جاهز" أول ما تظهر شاشة الرمز أو الرئيسية ← نشيل الغطاء على طول */
@@ -156,7 +164,16 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     if (!d || d.sanad !== 'theme' || !H6.test(d.top) || !H6.test(d.bg) || !fromApp(e)) return;
     var t = { top: d.top, bg: d.bg, dark: d.dark === true };
     setTheme(t);
+    /* سند 9.83: نحفظ الوضع المختار (نهاري · ليلي · تلقائي) ولون خلفية كل وضع — الفتح الجاي يطلع بنفس الوضع من أول ثانية */
+    var old = {}; try { old = JSON.parse(localStorage.getItem('sanad_theme') || '{}') || {}; } catch (x) {}
+    if (d.mode === 'light' || d.mode === 'dark' || d.mode === 'auto') t.mode = d.mode;
+    t.bgL = t.dark ? (H6.test(old.bgL || '') ? old.bgL : '') : t.bg; t.bgD = t.dark ? t.bg : (H6.test(old.bgD || '') ? old.bgD : '');
     try { localStorage.setItem('sanad_theme', JSON.stringify(t)); } catch (x) {}
+  });
+  /* سند 9.83: شاشة الفتح الموحّدة — سند يسأل «فيه شاشة فتح؟» ← نرد نعم، فما يعيد حركة الشعار داخل التطبيق (الحركة هنا مرة وحدة وقوقل يحمّل بالخلفية) */
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || d.sanad !== 'splash?' || !e.source || !fromApp(e)) return;
+    try { e.source.postMessage({ sanad: 'splash-r', ok: true }, '*'); } catch (x) {}
   });
 
   /* v8: تحميل سند. قبل: بعد ٩ ثواني شاشة التحميل تختفي حتى لو سند ما طلع ← شاشة فاضية «واقفة» (يصير كثير لما تفتحه بعد فترة: قوقل أبطأ والنت يعلّق).

@@ -1,6 +1,6 @@
 /* سند — يحفظ صفحة الغلاف والأيقونات في الجوال عشان تفتح بسرعة
    (بيانات النظام نفسها ما تنحفظ هنا، تروح للشيت مباشرة) */
-var CACHE = 'sanad-v8';
+var CACHE = 'sanad-v9';   // v9.84: اهتزاز التعاميم
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png', './apple-touch-icon.png', './favicon.png'];
 
 self.addEventListener('install', function (e) {
@@ -35,7 +35,7 @@ self.addEventListener('push', function (e) {
   var m = d.data || d, n = d.notification || {};
   e.waitUntil(self.registration.showNotification(m.t || n.title || 'سند', {
     body: m.b || n.body || '', icon: 'icon-192.png', badge: 'icon-192.png', tag: m.tag || 'sanad', renotify: true,
-    dir: 'auto', vibrate: [200, 100, 200], data: { u: m.u || './' }
+    dir: 'auto', vibrate: /^sanad-crc:/.test(m.tag || '') ? [240, 120, 240, 120, 420] : [200, 100, 200], requireInteraction: /^sanad-crc:/.test(m.tag || ''), data: { u: m.u || './' }   // v9.84: التعاميم الرسمية باهتزاز مميز وتبقى لين تنفتح
   }));
 });
 self.addEventListener('notificationclick', function (e) {

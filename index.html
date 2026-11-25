@@ -124,7 +124,7 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
   /* ═══ الرابط الرسمي لنظام سند — ما يتغير ═══ */
   var APP_URL = 'https://script.google.com/macros/s/AKfycbyGpZXFoPyezeBBB3hAcnxDYJXw6gN1USfKZAgEZgj8N-Kp3M_P5oTQh16S9JcOKpLJ/exec';
 
-  var splash = document.getElementById('splash'), hidden = false, t0 = Date.now(), slowT = 0;
+  var splash = document.getElementById('splash'), hidden = false, t0 = Date.now(), slowT = 0, appUp = false;   // v9.87: appUp = سند قال «جاهز»
   /* رجوع سريع: سند كان ظاهر قبل أقل من ١٠ دقايق (طلعت بزر الرئيسية ورجعت) ← الشعار ثابت بدون الحركة، ويختفي أول ما يجهز سند */
   var QUICK = (function () { try { var t = Number(localStorage.getItem('sanad_cover_seen') || 0); return t > 0 && Date.now() - t < 600000; } catch (x) { return false; } })();
   if (QUICK) splash.classList.add('qk');
@@ -170,6 +170,49 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     t.bgL = t.dark ? (H6.test(old.bgL || '') ? old.bgL : '') : t.bg; t.bgD = t.dark ? t.bg : (H6.test(old.bgD || '') ? old.bgD : '');
     try { localStorage.setItem('sanad_theme', JSON.stringify(t)); } catch (x) {}
   });
+  /* سند 9.87: سند يسأل «الجوال ليلي ولا نهاري؟» (scheme?) ← نرد على طول، ولما يتغيّر إعداد الجوال نرسل له (وضع «تلقائي») — قبل ما كان فيه رد */
+  var schemeTo = null, darkMq = null;
+  try { darkMq = window.matchMedia('(prefers-color-scheme: dark)'); } catch (x) {}
+  function schemeSend() { if (!schemeTo || !darkMq) return; try { schemeTo.w.postMessage({ sanad: 'scheme', dark: !!darkMq.matches }, schemeTo.o); } catch (x) {} }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || d.sanad !== 'scheme?' || !e.source || !fromApp(e)) return;
+    schemeTo = { w: e.source, o: e.origin === 'null' ? '*' : e.origin }; schemeSend();
+  });
+  try { if (darkMq) { if (darkMq.addEventListener) darkMq.addEventListener('change', schemeSend); else if (darkMq.addListener) darkMq.addListener(schemeSend); } } catch (x) {}
+  /* سند 9.87: تسجيل الرسالة الصوتية من الغلاف — إطارات قوقل (Apps Script) ممكن تحظر المايكروفون حتى والإذن مفتوح،
+     فسند يطلب التسجيل من هنا (postMessage): rec-start ← نرد rec-ack على طول ثم rec-on (بدأ) أو rec-err (السبب) · rec-stop ← rec-done بالملف (base64) · rec-cancel ← بدون ملف.
+     من إطار سند بس (fromApp) · أقصى ٦٠ ثانية · المايكروفون ينقفل أول ما يخلص */
+  var REC = null;
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d || !e.source || (d.sanad !== 'rec-start' && d.sanad !== 'rec-stop' && d.sanad !== 'rec-cancel') || !fromApp(e)) return;
+    var src = e.source, org = e.origin === 'null' ? '*' : e.origin, reply = function (o) { try { src.postMessage(o, org); } catch (x) {} };
+    if (d.sanad !== 'rec-start') { if (REC) { if (d.sanad === 'rec-cancel') REC.cancel = true; try { REC.mr.stop(); } catch (x) {} } return; }
+    reply({ sanad: 'rec-ack' });
+    if (REC) { REC.cancel = true; try { REC.mr.stop(); } catch (x) {} REC = null; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { reply({ sanad: 'rec-err', name: 'NoMediaRecorder' }); return; }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (st) {
+      var mt = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus', 'audio/ogg'].filter(function (t) { try { return MediaRecorder.isTypeSupported(t); } catch (x) { return false; } })[0] || '';
+      var mr, ch = [], t0 = Date.now(), me;
+      try { mr = mt ? new MediaRecorder(st, { mimeType: mt }) : new MediaRecorder(st); } catch (x) { st.getTracks().forEach(function (k) { k.stop(); }); reply({ sanad: 'rec-err', name: String((x && x.name) || 'Error').slice(0, 40) }); return; }
+      me = REC = { mr: mr, cancel: false, cap: 0 };
+      mr.ondataavailable = function (ev) { if (ev.data && ev.data.size) ch.push(ev.data); };
+      mr.onstop = function () {
+        try { st.getTracks().forEach(function (k) { k.stop(); }); } catch (x) {}
+        clearTimeout(me.cap); if (REC === me) REC = null;
+        if (me.cancel) { reply({ sanad: 'rec-done', cancel: true }); return; }
+        var bl = new Blob(ch, { type: String(mr.mimeType || mt || 'audio/webm').split(';')[0] }), sec = Math.min(60, Math.round((Date.now() - t0) / 1000));
+        if (bl.size > 2000000) { reply({ sanad: 'rec-err', name: 'TooBig' }); return; }
+        var fr = new FileReader();
+        fr.onload = function () { reply({ sanad: 'rec-done', b64: String(fr.result).split(',')[1] || '', mime: bl.type || 'audio/webm', sec: sec }); };
+        fr.onerror = function () { reply({ sanad: 'rec-err', name: 'ReadError' }); };
+        fr.readAsDataURL(bl);
+      };
+      try { mr.start(1000); } catch (x) { try { st.getTracks().forEach(function (k) { k.stop(); }); } catch (y) {} REC = null; reply({ sanad: 'rec-err', name: String((x && x.name) || 'Error').slice(0, 40) }); return; }
+      me.cap = setTimeout(function () { try { mr.stop(); } catch (x) {} }, 60000);
+      reply({ sanad: 'rec-on' });
+    }).catch(function (err) { reply({ sanad: 'rec-err', name: String((err && err.name) || 'Error').slice(0, 40) }); });
+  });
+  document.addEventListener('visibilitychange', function () { if (document.hidden && REC) { try { REC.mr.stop(); } catch (x) {} } });   // طلع من التطبيق ← يوقف ويرسل اللي انسجل
   /* سند 9.83: شاشة الفتح الموحّدة — سند يسأل «فيه شاشة فتح؟» ← نرد نعم، فما يعيد حركة الشعار داخل التطبيق (الحركة هنا مرة وحدة وقوقل يحمّل بالخلفية) */
   window.addEventListener('message', function (e) {
     var d = e.data; if (!d || d.sanad !== 'splash?' || !e.source || !fromApp(e)) return;
@@ -193,7 +236,7 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     }, 12000);
   }
   function loadApp() {
-    tries++;
+    tries++; appUp = false;
     var old = document.getElementById('app'); if (old) old.parentNode.removeChild(old);
     var f = document.createElement('iframe');
     f.id = 'app';
@@ -218,15 +261,16 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
      نسأل سند «شغّال؟» (ping لكل الإطارات) ولو ما رد خلال ٨ ثواني نعيد تحميله بشاشة التحميل.
      يشتغل بس لو سند رد مرة قبل (سند 9.30 وطالع فيه الرد) — النسخ القديمة ما تنعاد أبد */
   var canPong = false, hidAt = 0, waitP = null;
-  function ping(id) {
+  function toApp(o) {   // v9.87: سند داخل إطارات قوقل ← نرسل لكل الإطارات (نفس طريقة ping)
     var app = document.getElementById('app'), n = 0;
     (function walk(w, d) {
       if (!w || d > 4 || n > 30) return; n++;
-      try { w.postMessage({ sanad: 'ping', id: id }, '*'); } catch (x) {}
+      try { w.postMessage(o, '*'); } catch (x) {}
       var k = 0; try { k = w.length; } catch (x) {}
       for (var i = 0; i < k && i < 10; i++) { var c = null; try { c = w[i]; } catch (x) {} walk(c, d + 1); }
     })(app && app.contentWindow, 0);
   }
+  function ping(id) { toApp({ sanad: 'ping', id: id }); }
   window.addEventListener('message', function (e) {
     var d = e.data; if (!d) return;
     if (d.sanad === 'ready') { setTimeout(function () { ping('hi'); }, 300); return; }   // نعرف هل سند يرد
@@ -242,6 +286,30 @@ html.dk #bio .pn{background:#15211D;color:#E6EEEA}html.dk #bio p,html.dk #bio .n
     ping(id);
   }
   document.addEventListener('visibilitychange', function () { if (document.hidden) { if (!hidAt) hidAt = Date.now(); } else back(); });
+
+  /* سند 9.87: الضغط على إشعار الجوال ← سند يفتح على مكانه بالضبط (المهمة · التعميم …).
+     التطبيق مسكّر: الرقم يجي بالرابط (?n=) · مفتوح: من sw.js (push-open). نرسله لسند (go) بعد ما يقول «جاهز» ونعيد لين يرد go-r (لين ١٨ ثانية — الرمز وشاشة القفل) */
+  var NAV = (function () { try { return String(new URLSearchParams(location.search).get('n') || '').slice(0, 120); } catch (x) { return ''; } })(), navT = 0, navN = 0;
+  if (NAV) { try { history.replaceState(null, '', location.pathname); } catch (x) {} }
+  function navSend() {
+    clearTimeout(navT);
+    if (!NAV || !appUp) return;
+    toApp({ sanad: 'go', n: NAV });
+    if (++navN < 12) navT = setTimeout(navSend, 1500); else NAV = '';
+  }
+  window.addEventListener('message', function (e) {
+    var d = e.data; if (!d) return;
+    if (d.sanad === 'ready') { appUp = true; navN = 0; setTimeout(navSend, 400); return; }
+    if (d.sanad === 'go-r' && fromApp(e)) { NAV = ''; clearTimeout(navT); }
+    /* سند 9.87: التعميم انقرا ← إشعاره ينشال من شريط الجوال */
+    if (d.sanad === 'push-close' && typeof d.tag === 'string' && /^sanad-[\w:.-]{1,120}$/.test(d.tag) && fromApp(e) && navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+      navigator.serviceWorker.getRegistration().then(function (reg) { return reg && reg.getNotifications ? reg.getNotifications({ tag: d.tag }) : []; }).then(function (L) { (L || []).forEach(function (x) { x.close(); }); }).catch(function () {});
+    }
+  });
+  if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', function (e) {
+    var d = e.data; if (!d || d.sanad !== 'push-open' || typeof d.n !== 'string' || !d.n) return;
+    NAV = d.n.slice(0, 120); navN = 0; navSend();
+  });
   window.addEventListener('pageshow', function (e) { if (e.persisted) back(); });
 
   /* سند 9.40: «إعادة تشغيل سند» — سند (من داخل إطاره بس) يطلب: نرد «restart-r»، نمسح كاش الغلاف ونحدّث الـSW (بدون ما نلغيه — الإشعارات تبقى)،
